@@ -1,10 +1,10 @@
 import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 export default function Index() {
-
-  const goToProducts =()=>{
-    <Link href="/Products"/>
+  const router = useRouter();
+  const navigateTo = () => {
+    router.push("/Products");
   }
   return (
     <View style={styles.container}>
@@ -20,16 +20,13 @@ export default function Index() {
     <Text style={styles.categoryHeader} >Categorie</Text>
 
     <View style={styles.categoryContainer}>
-    <Link href="/Products"  style={styles.categoryButton}>
-    <Text style={styles.categoryButtonText}>test</Text>
-      </Link>
-      <TouchableOpacity style={styles.categoryButton} onPress={goToProducts}>
+      <TouchableOpacity style={styles.categoryButton} onPress={() => navigateTo()}>
         <Text style={styles.categoryButtonText}>Bier</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.categoryButton}>
+      <TouchableOpacity style={styles.categoryButton} onPress={() => navigateTo()}>
         <Text style={styles.categoryButtonText}>Snoep</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.categoryButton}>
+      <TouchableOpacity style={styles.categoryButton} onPress={() => navigateTo()}>
         <Text style={styles.categoryButtonText}>Friss</Text>
       </TouchableOpacity>
     </View>

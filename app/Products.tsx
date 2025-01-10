@@ -1,21 +1,118 @@
-import { Text, View, StyleSheet } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { getData } from '../backend/getData';
 
-export default function Products() {
+export default function Producten () {
+  const navigation = useNavigation();
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getData();
+        setData(result);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+console.log(data)
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Products screen</Text>
+      <View style={styles.header}>
+        <Text style={styles.name}>naam</Text>
+        <Text style={styles.balance}>$100.-</Text>
+      </View>
+
+      <View style={styles.searchBarContainer}>
+        <TextInput style={styles.searchBar} placeholder="Search" />
+      </View>
+
+      <Text style={styles.categoryHeader}>producten</Text>
+
+      <View style={styles.categoryContainer}>
+        {data && data.map(item => (
+          <TouchableOpacity 
+            key={item.id} 
+            style={styles.categoryButton} 
+          >
+            <Text style={styles.categoryButtonText}>{item.name}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#25292e',
-    justifyContent: 'center',
+    backgroundColor: '#f0f8ff', // Light blue background
+    padding: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#ff6347', // Tomato red background
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  name: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  balance: {
+    fontSize: 20,
+    color: 'white',
+  },
+  searchBarContainer: {
+    marginBottom: 20,
+  },
+  searchBar: {
+    width: '100%',
+    padding: 10,
+    fontSize: 16,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: 'white',
+  },
+  categoryHeader: {
+    fontSize: 24,
+    color: '#555',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  categoryContainer: {
     alignItems: 'center',
   },
-  text: {
-    color: '#fff',
+  categoryButton: {
+    width: '80%',
+    padding: 15,
+    backgroundColor: '#4caf50', // Green background
+    borderRadius: 10,
+    marginBottom: 15,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 2, // For Android shadow
+  },
+  categoryButtonText: {
+    fontSize: 18,
+    color: 'white',
   },
 });
+
+
