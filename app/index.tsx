@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { getCategories } from "../backend/getData";
+import { Category } from "./types";
 
 export default function Index() {
   const router = useRouter();
@@ -15,7 +16,7 @@ export default function Index() {
     router.push(`/Products?id=${id}`);
   };
 
-  const [data, setData] = useState<{ id: number; name: string }[] | null>(null);
+  const [data, setData] = useState< Category[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
@@ -55,7 +56,7 @@ export default function Index() {
             </TouchableOpacity>
           ))}
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => router.push("/ProductManager")}>
+      <TouchableOpacity style={styles.button} onPress={() => router.push("../manager/ProductManager")}>
         <Text style={styles.name}>ProductManager</Text>
       </TouchableOpacity>
     </View>

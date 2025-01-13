@@ -7,16 +7,20 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
+import { useRouter } from "expo-router";
 import { getProducts } from "../backend/getData";
+import { Product } from './types';
+
 
 type RouteParams = {
   id: number; // Assuming id is a number, adjust if it's a string
 };
 
 export default function Producten() {
+  const router = useRouter();
   const route = useRoute();
   const { id } = route.params as RouteParams;
-  const [data, setData] = useState<{ id: number; name: string }[] | null>(null);
+  const [data, setData] = useState<Product[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   useEffect(() => {
     const fetchData = async () => {
@@ -27,9 +31,15 @@ export default function Producten() {
         setError(error as Error);
       }
     };
-
+    
     fetchData();
   }, [id]);
+  const handleInfoPress = (product: Product) => {
+    router.push({
+      pathname: "/ProductInfo",
+      params: { product: JSON.stringify(product) }
+    });
+  };
   console.log(data);
   return (
     <View style={styles.container}>
@@ -46,10 +56,19 @@ export default function Producten() {
 
       <View style={styles.categoryContainer}>
         {data &&
-          data.map((products) => (
-            <TouchableOpacity key={products.id} style={styles.categoryButton}>
-              <Text style={styles.categoryButtonText}>{products.name}</Text>
-            </TouchableOpacity>
+          data.map((product) => (
+            <View key={product.id} style={styles.productRow}>
+              <TouchableOpacity style={styles.categoryButton}>
+                <View style={styles.buttonContent}>
+                  <Text style={styles.categoryButtonText}>
+                    {product.name} €{product.price % 1 === 0 ? `${product.price}.-` : product.price}
+                  </Text>
+                  <TouchableOpacity style={styles.infoButton} onPress={() => handleInfoPress(product)}>
+                    <Text style={styles.infoButtonText}>i</Text>
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+            </View>
           ))}
       </View>
     </View>
@@ -102,20 +121,48 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   categoryButton: {
-    width: "80%",
+    width: '100%',
     padding: 15,
-    backgroundColor: "#4caf50", // Green background
+    backgroundColor: "#4caf50",
     borderRadius: 10,
-    marginBottom: 15,
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
-    elevation: 2, // For Android shadow
+    elevation: 2,
   },
   categoryButtonText: {
     fontSize: 18,
     color: "white",
+  },
+  infoButton: {
+    width: 30,
+    height: 30,
+    backgroundColor: '#2196F3',
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  infoButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  buttonContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  productRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: '10%',
+    marginBottom: 15,
   },
 });
