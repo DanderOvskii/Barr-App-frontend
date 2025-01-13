@@ -1,29 +1,36 @@
-import React, {useEffect, useState} from 'react';
-import { StyleSheet, View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { getData } from '../backend/getData';
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
+import { useRoute } from "@react-navigation/native";
+import { getProducts } from "../backend/getData";
 
-export default function Producten () {
-  const navigation = useNavigation();
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+type RouteParams = {
+  id: number; // Assuming id is a number, adjust if it's a string
+};
 
+export default function Producten() {
+  const route = useRoute();
+  const { id } = route.params as RouteParams;
+  const [data, setData] = useState<{ id: number; name: string }[] | null>(null);
+  const [error, setError] = useState<Error | null>(null);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getData();
+        const result = await getProducts(id);
         setData(result);
-      } catch (error) {
-        setError(error);
-      } finally {
-        setLoading(false);
+      } catch (error: unknown) {
+        setError(error as Error);
       }
     };
 
     fetchData();
-  }, []);
-console.log(data)
+  }, [id]);
+  console.log(data);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -38,72 +45,70 @@ console.log(data)
       <Text style={styles.categoryHeader}>producten</Text>
 
       <View style={styles.categoryContainer}>
-        {data && data.map(item => (
-          <TouchableOpacity 
-            key={item.id} 
-            style={styles.categoryButton} 
-          >
-            <Text style={styles.categoryButtonText}>{item.name}</Text>
-          </TouchableOpacity>
-        ))}
+        {data &&
+          data.map((products) => (
+            <TouchableOpacity key={products.id} style={styles.categoryButton}>
+              <Text style={styles.categoryButtonText}>{products.name}</Text>
+            </TouchableOpacity>
+          ))}
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f8ff', // Light blue background
+    backgroundColor: "#f0f8ff", // Light blue background
     padding: 20,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     padding: 10,
-    backgroundColor: '#ff6347', // Tomato red background
+    backgroundColor: "#ff6347", // Tomato red background
     borderRadius: 10,
     marginBottom: 20,
   },
   name: {
     fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   balance: {
     fontSize: 20,
-    color: 'white',
+    color: "white",
   },
   searchBarContainer: {
     marginBottom: 20,
   },
   searchBar: {
-    width: '100%',
+    width: "100%",
     padding: 10,
     fontSize: 16,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#ccc',
-    backgroundColor: 'white',
+    borderColor: "#ccc",
+    backgroundColor: "white",
   },
   categoryHeader: {
     fontSize: 24,
-    color: '#555',
+    color: "#555",
     marginBottom: 10,
-    textAlign: 'center',
+    textAlign: "center",
   },
   categoryContainer: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   categoryButton: {
-    width: '80%',
+    width: "80%",
     padding: 15,
-    backgroundColor: '#4caf50', // Green background
+    backgroundColor: "#4caf50", // Green background
     borderRadius: 10,
     marginBottom: 15,
-    alignItems: 'center',
-    shadowColor: '#000',
+    alignItems: "center",
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -111,8 +116,6 @@ const styles = StyleSheet.create({
   },
   categoryButtonText: {
     fontSize: 18,
-    color: 'white',
+    color: "white",
   },
 });
-
-
