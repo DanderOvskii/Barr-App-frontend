@@ -11,7 +11,6 @@ import {
 import { getAllData, updateProduct } from "../../backend/getData";
 import { Product, CategoryWithProducts } from "../types";
 import addproduct from "./addproduct";
-
 export default function ProductManager() {
   console.log("ProductManager rendered");
   const [categories, setCategories] = useState<CategoryWithProducts[]>([]);
@@ -168,7 +167,10 @@ export default function ProductManager() {
             </TouchableOpacity>
           ))}
           {selectedCategory && (
-           addproduct(selectedCategory)
+         <TouchableOpacity style={styles.addButton} 
+         onPress={() => selectedCategory && addproduct(selectedCategory)}>
+         <Text style={styles.buttonText}>+</Text>
+       </TouchableOpacity>
           )}
         </View>
 
@@ -240,6 +242,7 @@ export default function ProductManager() {
               >
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
+              
             </>
           ) : (
             <Text style={styles.noSelection}>
