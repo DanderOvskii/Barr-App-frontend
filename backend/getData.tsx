@@ -6,7 +6,7 @@ const BASE_URLS = {
   IP_10: 'http://10.0.2.2:8000',
 };
 
-let currentBaseURL = BASE_URLS.LOCAL; // Default base URL
+let currentBaseURL = BASE_URLS.IP_10; // Default base URL
 
 export const setBaseURL = (url: string) => {
   currentBaseURL = url;
@@ -93,6 +93,35 @@ export const createProduct = async (newProduct: Partial<Product>) => {
     if (axios.isAxiosError(error)) {
       console.error('API Error:', error.response?.data);
       throw new Error(error.response?.data?.message || 'Failed to create product');
+    }
+    throw error;
+  }
+};
+
+export const deleteProduct = async (productId: number) => {
+  try {
+    if (!productId) {
+      throw new Error('Invalid product ID');
+    }
+
+    const response = await axios.delete(
+      `${currentBaseURL}/ProductManager/${productId}`,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+    );
+
+    if (response.status !== 200) {
+      throw new Error(`Server responded with status: ${response.status}`);
+    }
+
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('API Error:', error.response?.data);
+      throw new Error(error.response?.data?.message || 'Failed to delete product');
     }
     throw error;
   }

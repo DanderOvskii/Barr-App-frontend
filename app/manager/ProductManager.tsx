@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { getAllData, updateProduct } from "../../backend/getData";
+import { getAllData, updateProduct,deleteProduct } from "../../backend/getData";
 import { Product, CategoryWithProducts } from "../types";
 import addproduct from "./addproduct";
 export default function ProductManager() {
@@ -19,6 +19,7 @@ export default function ProductManager() {
   const [isLoading, setIsLoading] = useState(true);
   const [editedProduct, setEditedProduct] = useState<Product | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,7 +84,7 @@ export default function ProductManager() {
         changes.calorien =
           parseFloat(editedProduct.calorien as unknown as string) || 0;
       }
-      
+
       if (editedProduct.alcohol.toString() !== original?.alcohol.toString()) {
         changes.alcohol =
           parseFloat(editedProduct.alcohol as unknown as string) || 0;
@@ -120,6 +121,24 @@ export default function ProductManager() {
         error instanceof Error ? error.message : "Failed to update product";
       Alert.alert("Error", errorMessage);
       console.error("Error saving product:", error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+  const handeledelete = async () => {
+    if (!selectedProduct) return;
+    
+    try {
+      setIsSaving(true);
+      await deleteProduct(selectedProduct.id);
+      setSelectedProduct(null);
+      // Refresh the product list after deletion
+      const updatedData = await getAllData();
+      setProducts(updatedData.products);
+      setCategories(updatedData.categories);
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      Alert.alert('Error', 'Failed to delete product');
     } finally {
       setIsSaving(false);
     }
@@ -167,10 +186,12 @@ export default function ProductManager() {
             </TouchableOpacity>
           ))}
           {selectedCategory && (
-         <TouchableOpacity style={styles.addButton} 
-         onPress={() => selectedCategory && addproduct(selectedCategory)}>
-         <Text style={styles.buttonText}>+</Text>
-       </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => selectedCategory && addproduct(selectedCategory)}
+            >
+              <Text style={styles.buttonText}>+</Text>
+            </TouchableOpacity>
           )}
         </View>
 
@@ -242,7 +263,13 @@ export default function ProductManager() {
               >
                 <Text style={styles.buttonText}>Cancel</Text>
               </TouchableOpacity>
-              
+              <TouchableOpacity
+                style={[styles.deleteButton, isSaving && styles.deleteButton]}
+                onPress={handeledelete}
+                disabled={isSaving}
+              >
+                <Text style={styles.buttonText}>delete</Text>
+              </TouchableOpacity>
             </>
           ) : (
             <Text style={styles.noSelection}>
@@ -360,6 +387,14 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 15,
     backgroundColor: "#ff6347",
+    borderRadius: 10,
+    marginTop: 20,
+    alignItems: "center",
+  },
+  deleteButton: {
+    width: "100%",
+    padding: 15,
+    backgroundColor: "#dc3545",
     borderRadius: 10,
     marginTop: 20,
     alignItems: "center",
