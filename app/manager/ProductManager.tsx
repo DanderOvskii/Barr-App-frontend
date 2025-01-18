@@ -21,6 +21,9 @@ export default function ProductManager() {
   const [isSaving, setIsSaving] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
 
+  const currentCategoryProducts = selectedCategory && categories?.length > 0
+    ? categories.find((cat) => cat.id === selectedCategory)?.products || []
+    : [];
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,9 +48,6 @@ export default function ProductManager() {
     }
   }, [selectedProduct]);
 
-  const currentCategoryProducts = selectedCategory
-    ? categories.find((cat) => cat.id === selectedCategory)?.products || []
-    : [];
 
   const handleProductChange = (field: keyof Product, value: string) => {
     if (!editedProduct) return;
@@ -134,8 +134,7 @@ export default function ProductManager() {
       setSelectedProduct(null);
       // Refresh the product list after deletion
       const updatedData = await getAllData();
-      setProducts(updatedData.products);
-      setCategories(updatedData.categories);
+      setCategories(updatedData);
     } catch (error) {
       console.error('Error deleting product:', error);
       Alert.alert('Error', 'Failed to delete product');

@@ -6,7 +6,7 @@ const BASE_URLS = {
   IP_10: 'http://10.0.2.2:8000',
 };
 
-let currentBaseURL = BASE_URLS.IP_10; // Default base URL
+let currentBaseURL = BASE_URLS.LOCAL; // Default base URL
 
 export const setBaseURL = (url: string) => {
   currentBaseURL = url;
