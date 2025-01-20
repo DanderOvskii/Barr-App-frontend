@@ -8,9 +8,13 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
-import { getAllData, updateProduct,deleteProduct } from "../../backend/getData";
+import {
+  getAllData,
+  updateProduct,
+  deleteProduct,
+  createProduct,
+} from "../../backend/getData";
 import { Product, CategoryWithProducts } from "../types";
-import addproduct from "./addproduct";
 export default function ProductManager() {
   console.log("ProductManager rendered");
   const [categories, setCategories] = useState<CategoryWithProducts[]>([]);
@@ -21,14 +25,17 @@ export default function ProductManager() {
   const [isSaving, setIsSaving] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
 
-  const currentCategoryProducts = selectedCategory && categories?.length > 0
-    ? categories.find((cat) => cat.id === selectedCategory)?.products || []
-    : [];
+  const currentCategoryProducts =
+    selectedCategory && categories?.length > 0
+      ? categories.find((cat) => cat.id === selectedCategory)?.products || []
+      : [];
   useEffect(() => {
+    
     const fetchData = async () => {
       try {
         setIsLoading(true);
         const result = await getAllData();
+        console.log("gotDATATATA");
         setCategories(result);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -48,7 +55,6 @@ export default function ProductManager() {
     }
   }, [selectedProduct]);
 
-
   const handleProductChange = (field: keyof Product, value: string) => {
     if (!editedProduct) return;
 
@@ -59,9 +65,13 @@ export default function ProductManager() {
       [field]: field === "name" ? value : formattedValue,
     });
   };
+
+  //--------------------------------------------------------------------------------
   const handleCancel = () => {
     setEditedProduct(selectedProduct);
   };
+
+  //--------------------------------------------------------------------------------
   const handleSave = async () => {
     if (!editedProduct || !selectedCategory) return;
 
@@ -88,6 +98,14 @@ export default function ProductManager() {
       if (editedProduct.alcohol.toString() !== original?.alcohol.toString()) {
         changes.alcohol =
           parseFloat(editedProduct.alcohol as unknown as string) || 0;
+      }
+      if (editedProduct.vooraad.toString() !== original?.vooraad.toString()) {
+        changes.vooraad =
+          parseFloat(editedProduct.vooraad as unknown as string) || 0;
+      }
+      if (editedProduct.korting.toString() !== original?.korting.toString()) {
+        changes.korting =
+          parseFloat(editedProduct.korting as unknown as string) || 0;
       }
       // Only make API call if there are actual changes
       if (Object.keys(changes).length > 0) {
@@ -125,19 +143,64 @@ export default function ProductManager() {
       setIsSaving(false);
     }
   };
+
+  //--------------------------------------------------------------------------------
+  const addProduct = async (categoryId: number) => {
+    try {
+      const newProduct: Partial<Product> = {
+        name: "New Product",
+        price: 0,
+        category_id: categoryId,
+        calorien: 0,
+        alcohol: 0,
+        vooraad: 0,
+        korting: 0,
+      };
+
+      const createdProduct = await createProduct(newProduct);
+
+      // Update categories with the new product
+      setCategories((prevCategories) =>
+        prevCategories.map((category) => {
+          if (category.id === categoryId) {
+            return {
+              ...category,
+              products: [...category.products, createdProduct],
+            };
+          }
+          return category;
+        })
+      );
+
+      // Set the newly created product as selected
+      setSelectedProduct(createdProduct);
+      setEditedProduct(createdProduct);
+    } catch (error) {
+      Alert.alert("Error", "Failed to create new product");
+      console.error("Error creating product:", error);
+    }
+  };
+
+  //--------------------------------------------------------------------------------
   const handeledelete = async () => {
     if (!selectedProduct) return;
-    
+
     try {
       setIsSaving(true);
       await deleteProduct(selectedProduct.id);
-      setSelectedProduct(null);
       // Refresh the product list after deletion
       const updatedData = await getAllData();
       setCategories(updatedData);
+      setSelectedProduct(
+        selectedCategory
+          ? updatedData.find(
+              (cat: CategoryWithProducts) => cat.id === selectedCategory
+            )?.products[0] || null
+          : null
+      );
     } catch (error) {
-      console.error('Error deleting product:', error);
-      Alert.alert('Error', 'Failed to delete product');
+      console.error("Error deleting product:", error);
+      Alert.alert("Error", "Failed to delete product");
     } finally {
       setIsSaving(false);
     }
@@ -187,7 +250,7 @@ export default function ProductManager() {
           {selectedCategory && (
             <TouchableOpacity
               style={styles.addButton}
-              onPress={() => selectedCategory && addproduct(selectedCategory)}
+              onPress={() => selectedCategory && addProduct(selectedCategory)}
             >
               <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
@@ -213,7 +276,7 @@ export default function ProductManager() {
                 <Text style={styles.inputLabel}>Prijs</Text>
                 <TextInput
                   style={styles.input}
-                  value={editedProduct?.price.toString()}
+                  value={editedProduct?.price.toString()|| ""}
                   onChangeText={(value) => handleProductChange("price", value)}
                   placeholder="Enter price"
                   placeholderTextColor="#999"
@@ -224,7 +287,7 @@ export default function ProductManager() {
                 <Text style={styles.inputLabel}>Calorieën</Text>
                 <TextInput
                   style={styles.input}
-                  value={editedProduct?.calorien.toString()}
+                  value={editedProduct?.calorien.toString()|| ""}
                   onChangeText={(value) =>
                     handleProductChange("calorien", value)
                   }
@@ -237,11 +300,33 @@ export default function ProductManager() {
                 <Text style={styles.inputLabel}>Alcohol per 100ml</Text>
                 <TextInput
                   style={styles.input}
-                  value={editedProduct?.alcohol.toString()}
+                  value={editedProduct?.alcohol.toString()|| ""}
                   onChangeText={(value) =>
                     handleProductChange("alcohol", value)
                   }
                   placeholder="Enter alcohol content"
+                  placeholderTextColor="#999"
+                  keyboardType="decimal-pad"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>korting</Text>
+                <TextInput
+                  style={styles.input}
+                  value={editedProduct?.korting.toString()|| ""}
+                  onChangeText={(value) => handleProductChange("korting", value)}
+                  placeholder="Enter korting"
+                  placeholderTextColor="#999"
+                  keyboardType="decimal-pad"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>vooraad</Text>
+                <TextInput
+                  style={styles.input}
+                  value={editedProduct?.vooraad.toString()|| ""}
+                  onChangeText={(value) => handleProductChange("vooraad", value)}
+                  placeholder="Enter vooraad"
                   placeholderTextColor="#999"
                   keyboardType="decimal-pad"
                 />

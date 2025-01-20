@@ -6,7 +6,7 @@ const BASE_URLS = {
   IP_10: 'http://10.0.2.2:8000',
 };
 
-let currentBaseURL = BASE_URLS.LOCAL; // Default base URL
+let currentBaseURL = BASE_URLS.IP_10; // Default base URL
 
 export const setBaseURL = (url: string) => {
   currentBaseURL = url;
@@ -122,6 +122,24 @@ export const deleteProduct = async (productId: number) => {
     if (axios.isAxiosError(error)) {
       console.error('API Error:', error.response?.data);
       throw new Error(error.response?.data?.message || 'Failed to delete product');
+    }
+    throw error;
+  }
+};
+
+export const searchCategories = async (query: string) => {
+  try {
+    const response = await axios.get(`${currentBaseURL}/search`, {
+      params: { q: query },
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Search API Error:', error.response?.data);
+      throw new Error(error.response?.data?.message || 'Failed to search categories');
     }
     throw error;
   }

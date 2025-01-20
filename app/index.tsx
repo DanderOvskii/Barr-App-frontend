@@ -8,7 +8,8 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { getCategories } from "../backend/getData";
-import { Category } from "./types";
+import { Category,Product } from "./types";
+import SearchBar from "./SearchBar";
 
 export default function Index() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function Index() {
     router.push(`/Products?id=${id}`);
   };
 
-  const [data, setData] = useState< Category[] | null>(null);
+  const [data, setData] = useState<Category[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
@@ -32,16 +33,22 @@ export default function Index() {
     fetchData();
   }, []);
   console.log(data);
+  const handleInfoPress = (product: Product) => {
+    router.push({
+      pathname: "/ProductInfo",
+      params: { product: JSON.stringify(product) },
+    });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.name}>naam</Text>
         <Text style={styles.balance}>$100.-</Text>
       </View>
-
-      <View style={styles.searchBarContainer}>
-        <TextInput style={styles.searchBar} placeholder="Search" />
-      </View>
+      <SearchBar
+        placeholder="Search categories..."
+        onSelectItem={(Product) => handleInfoPress(Product)}
+      />
 
       <Text style={styles.categoryHeader}>Categorie</Text>
 
@@ -56,7 +63,10 @@ export default function Index() {
             </TouchableOpacity>
           ))}
       </View>
-      <TouchableOpacity style={styles.button} onPress={() => router.push("../manager/ProductManager")}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("../manager/ProductManager")}
+      >
         <Text style={styles.name}>ProductManager</Text>
       </TouchableOpacity>
     </View>
@@ -79,7 +89,7 @@ const styles = StyleSheet.create({
   },
   button: {
     minWidth: 100,
-    alignSelf:"center",
+    alignSelf: "center",
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
@@ -97,18 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "white",
   },
-  searchBarContainer: {
-    marginBottom: 20,
-  },
-  searchBar: {
-    width: "100%",
-    padding: 10,
-    fontSize: 16,
-    borderRadius: 20,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    backgroundColor: "white",
-  },
+
   categoryHeader: {
     fontSize: 24,
     color: "#555",

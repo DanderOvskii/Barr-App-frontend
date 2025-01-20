@@ -5,6 +5,8 @@ export type Product = {
     category_id: number;
     calorien:number;
     alcohol:number;
+    korting:number;
+    vooraad:number;
     // Add any other product properties you have
   };
 export type Category = {
