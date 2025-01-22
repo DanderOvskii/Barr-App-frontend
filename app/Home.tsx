@@ -11,7 +11,7 @@ import { getCategories } from "../backend/getData";
 import { Category,Product } from "./types";
 import SearchBar from "./SearchBar";
 
-export default function Index() {
+export default function Home() {
   const router = useRouter();
   const navigateTo = (id: number) => {
     router.push(`/Products?id=${id}`);

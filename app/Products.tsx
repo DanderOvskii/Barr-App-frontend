@@ -10,6 +10,7 @@ import { useRoute } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { getProducts } from "../backend/getData";
 import { Product } from './types';
+import SearchBar from "./SearchBar";
 
 
 type RouteParams = {
@@ -48,9 +49,9 @@ export default function Producten() {
         <Text style={styles.balance}>$100.-</Text>
       </View>
 
-      <View style={styles.searchBarContainer}>
-        <TextInput style={styles.searchBar} placeholder="Search" />
-      </View>
+      <SearchBar
+        placeholder="Search products..."
+        onSelectItem={(product) => handleInfoPress(product)}/>
 
       <Text style={styles.categoryHeader}>producten</Text>
 

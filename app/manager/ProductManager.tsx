@@ -7,6 +7,7 @@ import {
   TextInput,
   ActivityIndicator,
   Alert,
+  ScrollView,
 } from "react-native";
 import {
   getAllData,
@@ -14,7 +15,7 @@ import {
   deleteProduct,
   createProduct,
 } from "../../backend/getData";
-import { Product, CategoryWithProducts } from "../types";
+import { Product, CategoryWithProducts, DisplayProduct } from "../types";
 export default function ProductManager() {
   console.log("ProductManager rendered");
   const [categories, setCategories] = useState<CategoryWithProducts[]>([]);
@@ -30,7 +31,6 @@ export default function ProductManager() {
       ? categories.find((cat) => cat.id === selectedCategory)?.products || []
       : [];
   useEffect(() => {
-    
     const fetchData = async () => {
       try {
         setIsLoading(true);
@@ -147,37 +147,63 @@ export default function ProductManager() {
   //--------------------------------------------------------------------------------
   const addProduct = async (categoryId: number) => {
     try {
-      const newProduct: Partial<Product> = {
-        name: "New Product",
-        price: 0,
+      const newProduct: DisplayProduct = {
+        id: 0,
+        name: "",
+        price: "",
         category_id: categoryId,
-        calorien: 0,
-        alcohol: 0,
-        vooraad: 0,
-        korting: 0,
+        calorien: "",
+        alcohol: "",
+        vooraad: "",
+        korting: "",
       };
 
-      const createdProduct = await createProduct(newProduct);
+      // When creating product, convert empty strings to 0
+      const productToCreate: Product = {
+        ...newProduct,
+        price: Number(newProduct.price) || 0,
+        calorien: Number(newProduct.calorien) || 0,
+        alcohol: Number(newProduct.alcohol) || 0,
+        vooraad: Number(newProduct.vooraad) || 0,
+        korting: Number(newProduct.korting) || 0,
+      };
 
-      // Update categories with the new product
+      const createdProduct = await createProduct(productToCreate);
+
+      // Set the created product with empty string values for display
       setCategories((prevCategories) =>
         prevCategories.map((category) => {
           if (category.id === categoryId) {
             return {
               ...category,
-              products: [...category.products, createdProduct],
+              products: [
+                ...category.products,
+                {
+                  ...createdProduct,
+                  price: "",
+                  calorien: "",
+                  alcohol: "",
+                  vooraad: "",
+                  korting: "",
+                },
+              ],
             };
           }
           return category;
         })
       );
 
-      // Set the newly created product as selected
-      setSelectedProduct(createdProduct);
-      setEditedProduct(createdProduct);
+      setSelectedProduct({
+        ...createdProduct,
+        price: "",
+        calorien: "",
+        alcohol: "",
+        vooraad: "",
+        korting: "",
+      });
     } catch (error) {
-      Alert.alert("Error", "Failed to create new product");
       console.error("Error creating product:", error);
+      Alert.alert("Error", "Failed to create new product");
     }
   };
 
@@ -276,7 +302,7 @@ export default function ProductManager() {
                 <Text style={styles.inputLabel}>Prijs</Text>
                 <TextInput
                   style={styles.input}
-                  value={editedProduct?.price.toString()|| ""}
+                  value={editedProduct?.price.toString() || ""}
                   onChangeText={(value) => handleProductChange("price", value)}
                   placeholder="Enter price"
                   placeholderTextColor="#999"
@@ -287,7 +313,7 @@ export default function ProductManager() {
                 <Text style={styles.inputLabel}>Calorieën</Text>
                 <TextInput
                   style={styles.input}
-                  value={editedProduct?.calorien.toString()|| ""}
+                  value={editedProduct?.calorien.toString() || ""}
                   onChangeText={(value) =>
                     handleProductChange("calorien", value)
                   }
@@ -300,7 +326,7 @@ export default function ProductManager() {
                 <Text style={styles.inputLabel}>Alcohol per 100ml</Text>
                 <TextInput
                   style={styles.input}
-                  value={editedProduct?.alcohol.toString()|| ""}
+                  value={editedProduct?.alcohol.toString() || ""}
                   onChangeText={(value) =>
                     handleProductChange("alcohol", value)
                   }
@@ -313,8 +339,10 @@ export default function ProductManager() {
                 <Text style={styles.inputLabel}>korting</Text>
                 <TextInput
                   style={styles.input}
-                  value={editedProduct?.korting.toString()|| ""}
-                  onChangeText={(value) => handleProductChange("korting", value)}
+                  value={editedProduct?.korting.toString() || ""}
+                  onChangeText={(value) =>
+                    handleProductChange("korting", value)
+                  }
                   placeholder="Enter korting"
                   placeholderTextColor="#999"
                   keyboardType="decimal-pad"
@@ -324,8 +352,10 @@ export default function ProductManager() {
                 <Text style={styles.inputLabel}>vooraad</Text>
                 <TextInput
                   style={styles.input}
-                  value={editedProduct?.vooraad.toString()|| ""}
-                  onChangeText={(value) => handleProductChange("vooraad", value)}
+                  value={editedProduct?.vooraad.toString() || ""}
+                  onChangeText={(value) =>
+                    handleProductChange("vooraad", value)
+                  }
                   placeholder="Enter vooraad"
                   placeholderTextColor="#999"
                   keyboardType="decimal-pad"
@@ -423,12 +453,12 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     width: "100%",
-    marginBottom: 15,
+    marginBottom: 5,
   },
   inputLabel: {
     fontSize: 14,
     color: "#555",
-    marginBottom: 5,
+    marginBottom: 15,
     fontWeight: "500",
   },
   input: {

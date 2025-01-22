@@ -9,6 +9,16 @@ export type Product = {
     vooraad:number;
     // Add any other product properties you have
   };
+  export type DisplayProduct = {
+    id: number;
+    name: string;
+    price: string;
+    category_id: number;
+    calorien: string;
+    alcohol: string;
+    korting: string;
+    vooraad: string;
+};
 export type Category = {
     id: number;
     name: string;

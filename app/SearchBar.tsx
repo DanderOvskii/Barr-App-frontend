@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { getCategories } from "../backend/getData";
 import { Product } from "./types";
-import { searchCategories } from '../backend/getData';
+import { searchProducts } from '../backend/getData';
 
 interface SearchBarProps {
   placeholder?: string;
@@ -48,7 +48,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
       if (searchQuery.length >= 2) {
         setIsLoading(true);
         try {
-          const results = await searchCategories(searchQuery);
+          const results = await searchProducts(searchQuery);
           setFilteredData(results);
           setShowResults(true);
           setError(null);

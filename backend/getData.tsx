@@ -6,7 +6,7 @@ const BASE_URLS = {
   IP_10: 'http://10.0.2.2:8000',
 };
 
-let currentBaseURL = BASE_URLS.IP_10; // Default base URL
+let currentBaseURL = BASE_URLS.LOCAL; // Default base URL
 
 export const setBaseURL = (url: string) => {
   currentBaseURL = url;
@@ -127,7 +127,7 @@ export const deleteProduct = async (productId: number) => {
   }
 };
 
-export const searchCategories = async (query: string) => {
+export const searchProducts = async (query: string) => {
   try {
     const response = await axios.get(`${currentBaseURL}/search`, {
       params: { q: query },
@@ -140,6 +140,31 @@ export const searchCategories = async (query: string) => {
     if (axios.isAxiosError(error)) {
       console.error('Search API Error:', error.response?.data);
       throw new Error(error.response?.data?.message || 'Failed to search categories');
+    }
+    throw error;
+  }
+};
+
+
+export const loginUser = async (username: string, password: string) => {
+  try {
+    // Create URLSearchParams for form-urlencoded data
+    const formData = new URLSearchParams();
+    formData.append('username', username);
+    formData.append('password', password);
+
+    const response = await axios.post(`${currentBaseURL}/token`, 
+      formData.toString(),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message || 'Login failed');
     }
     throw error;
   }
