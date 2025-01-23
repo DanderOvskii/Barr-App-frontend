@@ -13,6 +13,21 @@ import SearchBar from "./SearchBar";
 
 export default function Home() {
   const router = useRouter();
+useEffect(() => {
+  const Verifytoken = async () => {
+    const token = localStorage.getItem("token");
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/veryfytoken/${token}`);
+    if (!token) {
+      throw new Error("No token found");
+    }
+  } catch(error) {
+    console.error("Error verifying token:", error);
+    router.replace("/(login)/login");
+  }
+};
+Verifytoken();
+}, []);
   const navigateTo = (id: number) => {
     router.push(`/Products?id=${id}`);
   };
