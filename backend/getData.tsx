@@ -1,16 +1,8 @@
 import axios from 'axios';
 import { Product, Category } from "../app/types";
-const BASE_URLS = {
-  LOCAL: 'http://127.0.0.1:8000',
-  IP_192: 'http://192.168.1.99:8000',
-  IP_10: 'http://10.0.2.2:8000',
-};
+import { currentBaseURL } from './bateUrl';
 
-let currentBaseURL = BASE_URLS.LOCAL; // Default base URL
 
-export const setBaseURL = (url: string) => {
-  currentBaseURL = url;
-};
 export const getProducts = async (categoryId: number) => {
   try {
     const response = await axios.get(`${currentBaseURL}/Products?categoryId=${categoryId}`);
@@ -146,15 +138,15 @@ export const searchProducts = async (query: string) => {
 };
 
 
-export const registerUser = async (username: string, password: string) => {
+export const registerUser = async (username: string, password: string, birthdate:Date) => {
   try {
-    const response = await axios.post(
-      `${currentBaseURL}/register`,
+    const response = await axios.post(`${currentBaseURL}/register`,
       null,
       {
         params: {
           username: username.trim(),
-          password: password
+          password: password,
+          birthdate: birthdate.toISOString().split('T')[0],
         }
       }
     );
@@ -193,3 +185,37 @@ export const loginUser = async (username: string, password: string) => {
     throw error;
   }
 };
+
+export const getCurrentUser = async () => {
+  try {
+    const response = await axios.get(`${currentBaseURL}/users/me`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('User API Error:', error.response?.data);
+      throw new Error(error.response?.data?.detail || 'Failed to fetch user data');
+    }
+    throw error;
+  }
+};
+
+export const buyProduct = async (productId: number) => {
+  try {
+    const response = await axios.post(`${currentBaseURL}/buy/${productId}`, null, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Buy API Error:', error.response?.data);
+      throw new Error(error.response?.data?.message || 'Failed to buy product');
+    }
+    throw error;
+  }
+}

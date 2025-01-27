@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from  'expo-router';
 import { Product } from './types';
+import BuyButton from './components/buyButton';
 
 
 export default function ProductInfo() {
@@ -24,6 +25,7 @@ export default function ProductInfo() {
         <Text style={styles.label}>alcohol:</Text>
         <Text style={styles.value}>{product.alcohol} per 100ml</Text>
       </View>
+       <BuyButton product={product} />
     </View>
   );
 }
@@ -33,6 +35,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: '#f0f8ff',
+    paddingHorizontal: "10%",
   },
   title: {
     fontSize: 24,
@@ -49,6 +52,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 3,
     elevation: 2,
+    marginBottom: 20,
   },
   label: {
     fontSize: 16,

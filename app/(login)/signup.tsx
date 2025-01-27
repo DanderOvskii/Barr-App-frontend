@@ -9,11 +9,12 @@ import {
 } from "react-native";
 import { registerUser } from "../../backend/getData";
 import { useRouter } from "expo-router";
-
+import CustomDatePicker from './datepicker';
 export default function signup() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [birthdate, setBirthdate] = useState<Date>(new Date());
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,8 +36,9 @@ export default function signup() {
   
     setIsLoading(true);
     try {
-      await registerUser(username, password);
-      router.replace("/(login)/login");
+      const response = await registerUser(username, password,birthdate);
+      localStorage.setItem("token", response.access_token);
+      router.push("/Home");
     } catch (error: any) {
       setError(error.message);
       console.error("Signup error:", error);
@@ -68,6 +70,10 @@ export default function signup() {
         autoCapitalize="none"
         editable={!isLoading}
       />
+      <CustomDatePicker 
+  date={birthdate}
+  onDateChange={(selectedDate) => setBirthdate(selectedDate)}
+/>
       {error && <Text style={styles.error}>{error}</Text>}
       <TouchableOpacity
         style={[styles.button, isLoading && styles.buttonDisabled]}

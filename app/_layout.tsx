@@ -1,7 +1,6 @@
-import { Stack } from "expo-router";
+import { Stack,useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
-import { useRouter, useSegments } from "expo-router";
-
+import { Text, TouchableOpacity } from "react-native";
 function useProtectedRoute() {
   const segments = useSegments();
   const router = useRouter();
@@ -23,13 +22,26 @@ function useProtectedRoute() {
 }
 
 export default function RootLayout() {
+  const router = useRouter();
   useProtectedRoute();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.replace("/(login)/login");
+  };
+  const LogoutButton = () => (
+    <TouchableOpacity 
+      onPress={handleLogout}
+      style={{ marginRight: 15 }}
+    >
+      <Text style={{ color: '#ff6347', fontSize: 16 }}>Logout</Text>
+    </TouchableOpacity>
+  );
 
   return (
     <Stack initialRouteName="(login)/login">
       <Stack.Screen name="(login)/login" options={{ headerShown: false }} />
       <Stack.Screen name="(login)/signup" options={{ headerShown: false }} />
-      <Stack.Screen name="Home" options={{ title: "Home" }} />
+      <Stack.Screen name="Home" options={{ title: "Home", headerRight: () => <LogoutButton />}} />
       <Stack.Screen name="Products" options={{ title: "Products" }} />
       <Stack.Screen name="manager/ProductManager" options={{ title: "Product Manager" }} />
       <Stack.Screen name="ProductInfo" options={{ title: "Info" }} />

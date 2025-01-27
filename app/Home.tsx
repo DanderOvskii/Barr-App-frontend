@@ -7,27 +7,31 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { getCategories } from "../backend/getData";
-import { Category,Product } from "./types";
-import SearchBar from "./SearchBar";
+import { getCategories,getCurrentUser } from "../backend/getData";
+import { Category, Product,user } from "./types";
+import SearchBar from "./components/SearchBar";
+import { currentBaseURL } from "../backend/bateUrl";
 
 export default function Home() {
   const router = useRouter();
-useEffect(() => {
-  const Verifytoken = async () => {
-    const token = localStorage.getItem("token");
-  try {
-    const response = await fetch(`http://127.0.0.1:8000/veryfytoken/${token}`);
-    if (!token) {
-      throw new Error("No token found");
-    }
-  } catch(error) {
-    console.error("Error verifying token:", error);
-    router.replace("/(login)/login");
-  }
-};
-Verifytoken();
-}, []);
+  const [userData, setUserData] = useState<user>();
+
+  useEffect(() => {
+    const Verifytoken = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await fetch(`${currentBaseURL}/verify-token/${token}`);
+        if (!response.ok) {
+          throw new Error("No token found");
+        }
+      } catch (error) {
+        console.error("Error verifying token:", error);
+        localStorage.removeItem("token");
+        router.replace("/(login)/login");
+      }
+    };
+    Verifytoken();
+  }, []);
   const navigateTo = (id: number) => {
     router.push(`/Products?id=${id}`);
   };
@@ -47,6 +51,25 @@ Verifytoken();
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const user = await getCurrentUser();
+        console.log("Current user data:", user); // This will log the user data
+        setUserData(user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+        // If there's an auth error, redirect to login
+        if (error instanceof Error && error.message.includes('401')) {
+          console.log("Redirecting to login");
+          router.replace("/(login)/login");
+        }
+      }
+    };
+
+    fetchUserData();
+  }, []);
   console.log(data);
   const handleInfoPress = (product: Product) => {
     router.push({
@@ -54,11 +77,12 @@ Verifytoken();
       params: { product: JSON.stringify(product) },
     });
   };
+  
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.name}>naam</Text>
-        <Text style={styles.balance}>$100.-</Text>
+        <Text style={styles.name}>{userData?.username || 'Loading...'}</Text>
+        <Text style={styles.balance}>€{userData?.wallet % 1 === 0 ? `${userData?.wallet}.-` : userData?.wallet||'Loading...'}</Text>
       </View>
       <SearchBar
         placeholder="Search categories..."

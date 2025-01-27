@@ -8,9 +8,9 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import { getCategories } from "../backend/getData";
-import { Product } from "./types";
-import { searchProducts } from '../backend/getData';
+import { getCategories } from "../../backend/getData";
+import { Product } from "../types";
+import { searchProducts } from '../../backend/getData';
 
 interface SearchBarProps {
   placeholder?: string;

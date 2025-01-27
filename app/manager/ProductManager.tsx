@@ -261,6 +261,11 @@ export default function ProductManager() {
         {/* Products Column */}
         <View style={styles.column}>
           <Text style={styles.columnHeader}>Product</Text>
+          <ScrollView
+            style={styles.scrollableColumn}
+            contentContainerStyle={{ flexGrow: 1 }}
+            showsVerticalScrollIndicator={true}
+          >
           {currentCategoryProducts.map((product) => (
             <TouchableOpacity
               key={product.id}
@@ -275,19 +280,24 @@ export default function ProductManager() {
           ))}
           {selectedCategory && (
             <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => selectedCategory && addProduct(selectedCategory)}
+            style={styles.addButton}
+            onPress={() => selectedCategory && addProduct(selectedCategory)}
             >
               <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
           )}
+          </ScrollView>
         </View>
 
         {/* Product Info Column */}
         <View style={styles.column}>
           <Text style={styles.columnHeader}>Product Info</Text>
           {selectedProduct ? (
-            <>
+            <ScrollView
+              style={styles.scrollableColumn}
+              contentContainerStyle={{ flexGrow: 1 }}
+              showsVerticalScrollIndicator={true}
+            >
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Naam</Text>
                 <TextInput
@@ -384,7 +394,7 @@ export default function ProductManager() {
               >
                 <Text style={styles.buttonText}>delete</Text>
               </TouchableOpacity>
-            </>
+            </ScrollView>
           ) : (
             <Text style={styles.noSelection}>
               Select a product to view details
@@ -406,11 +416,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 10,
+    flex: 1,
   },
   column: {
     flex: 1,
     alignItems: "center",
   },
+
   columnHeader: {
     fontSize: 20,
     fontWeight: "bold",
@@ -512,5 +524,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     alignItems: "center",
+  },
+  scrollableColumn: {
+    flexGrow: 1, // Changed from flex: 1
+    width: "100%",
+    height: "100%",
   },
 });
