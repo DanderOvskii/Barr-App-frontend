@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from  'expo-router';
 import { Product } from './types';
 import BuyButton from './components/buyButton';
+import Header from './components/header';
 
 
 export default function ProductInfo() {
@@ -11,6 +12,7 @@ export default function ProductInfo() {
 
   return (
     <View style={styles.container}>
+      <Header />
       <Text style={styles.title}>Product Information</Text>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Name:</Text>
