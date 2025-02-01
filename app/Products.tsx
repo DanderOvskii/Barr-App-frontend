@@ -12,6 +12,7 @@ import { getProducts, buyProduct } from "../backend/getData";
 import { Product } from "./types";
 import SearchBar from "./components/SearchBar";
 import BuyButton from "./components/buyButton";
+import Header from "./components/header";
 
 type RouteParams = {
   id: number; // Assuming id is a number, adjust if it's a string
@@ -45,10 +46,7 @@ export default function Producten() {
   console.log(data);
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.name}>naam</Text>
-        <Text style={styles.balance}>$100.-</Text>
-      </View>
+    <Header />
 
       <SearchBar
         placeholder="Search products..."
