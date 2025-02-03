@@ -89,6 +89,10 @@ export default function ProductManager() {
         changes.price =
           parseFloat(editedProduct.price as unknown as string) || 0;
       }
+      if (editedProduct.amount.toString() !== original?.amount.toString()) {
+        changes.amount =
+          parseFloat(editedProduct.amount as unknown as string) || 0;
+      }
 
       if (editedProduct.calorien.toString() !== original?.calorien.toString()) {
         changes.calorien =
@@ -151,6 +155,7 @@ export default function ProductManager() {
         id: 0,
         name: "",
         price: "",
+        amount: "",
         category_id: categoryId,
         calorien: "",
         alcohol: "",
@@ -162,6 +167,7 @@ export default function ProductManager() {
       const productToCreate: Product = {
         ...newProduct,
         price: Number(newProduct.price) || 0,
+        amount: Number(newProduct.amount) || 0,
         calorien: Number(newProduct.calorien) || 0,
         alcohol: Number(newProduct.alcohol) || 0,
         vooraad: Number(newProduct.vooraad) || 0,
@@ -181,6 +187,7 @@ export default function ProductManager() {
                 {
                   ...createdProduct,
                   price: "",
+                  amount: "",
                   calorien: "",
                   alcohol: "",
                   vooraad: "",
@@ -196,6 +203,7 @@ export default function ProductManager() {
       setSelectedProduct({
         ...createdProduct,
         price: "",
+        amount: "",
         calorien: "",
         alcohol: "",
         vooraad: "",
@@ -315,6 +323,17 @@ export default function ProductManager() {
                   value={editedProduct?.price.toString() || ""}
                   onChangeText={(value) => handleProductChange("price", value)}
                   placeholder="Enter price"
+                  placeholderTextColor="#999"
+                  keyboardType="decimal-pad"
+                />
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>hoeveelheid g/ml</Text>
+                <TextInput
+                  style={styles.input}
+                  value={editedProduct?.amount.toString() || ""}
+                  onChangeText={(value) => handleProductChange("amount", value)}
+                  placeholder="Enter amount"
                   placeholderTextColor="#999"
                   keyboardType="decimal-pad"
                 />

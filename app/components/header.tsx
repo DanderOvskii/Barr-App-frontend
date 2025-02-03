@@ -28,10 +28,7 @@ export default function Header() {
     <View style={styles.header}>
       <Text style={styles.name}>{userData?.username || "Loading..."}</Text>
       <Text style={styles.balance}>
-        €
-        {userData?.wallet % 1 === 0
-          ? `${userData?.wallet}.-`
-          : userData?.wallet || "Loading..."}
+        €{userData?.wallet|| "Loading..."}
       </Text>
     </View>
   );

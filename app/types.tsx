@@ -2,6 +2,7 @@ export type Product = {
   id: number;
   name: string;
   price: number;
+  amount: number;
   category_id: number;
   calorien: number;
   alcohol: number;
@@ -13,6 +14,7 @@ export type DisplayProduct = {
   id: number;
   name: string;
   price: string;
+  amount: string;
   category_id: number;
   calorien: string;
   alcohol: string;

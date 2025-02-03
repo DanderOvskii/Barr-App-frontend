@@ -19,7 +19,10 @@ export default function ProductInfo() {
         <Text style={styles.value}>{product.name}</Text>
         
         <Text style={styles.label}>Price:</Text>
-        <Text style={styles.value}>€{product.price % 1 === 0 ? `${product.price}.-` : product.price}</Text>
+        <Text style={styles.value}>€{product.price}</Text>
+
+        <Text style={styles.label}>Amount:</Text>
+        <Text style={styles.value}>{product.amount}g/ml</Text>
 
         <Text style={styles.label}>calorien:</Text>
         <Text style={styles.value}>{product.calorien}-Kcal</Text>
