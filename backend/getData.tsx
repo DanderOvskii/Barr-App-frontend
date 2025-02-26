@@ -22,6 +22,26 @@ export const getCategories = async () => {
     throw error;
   }
 };
+export const createCategory = async (categoryData: { name: string }) => {
+  try {
+    const response = await fetch(`${currentBaseURL}/categories`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(categoryData),
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to create category');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error creating category:', error);
+    throw error;
+  }
+};
 
 export const getAllData = async () => {
   try {
@@ -219,3 +239,29 @@ export const buyProduct = async (productId: number) => {
     throw error;
   }
 }
+
+export const updateUser = async (userData: {
+  username: string;
+  password?: string;
+  wallet: number;
+}) => {
+  try {
+    const response = await axios.put(
+      `${currentBaseURL}/users/update`,
+      userData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      console.error('Update User API Error:', error.response?.data);
+      throw new Error(error.response?.data?.message || 'Failed to update user data');
+    }
+    throw error;
+  }
+};

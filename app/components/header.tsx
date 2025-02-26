@@ -3,7 +3,7 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { user } from "../types";
-export default function Header() {
+export default function Header({ user }: { user?: user }) {
   const [userData, setUserData] = useState<user>();
   const router = useRouter();
   useEffect(() => {
@@ -23,33 +23,31 @@ export default function Header() {
     };
 
     fetchUserData();
-  }, []);
+  }, [user]);
   return (
     <View style={styles.header}>
       <Text style={styles.name}>{userData?.username || "Loading..."}</Text>
-      <Text style={styles.balance}>
-        €{userData?.wallet|| "Loading..."}
-      </Text>
+      <Text style={styles.balance}>€{userData?.wallet || "Loading..."}</Text>
     </View>
   );
 }
 const styles = StyleSheet.create({
-    name: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "white",
-      },
-      balance: {
-        fontSize: 20,
-        color: "white",
-      },
-      header: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: 10,
-        backgroundColor: "#ff6347", // Tomato red background
-        borderRadius: 10,
-        marginBottom: 20,
-      },
+  name: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+  },
+  balance: {
+    fontSize: 20,
+    color: "white",
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 10,
+    backgroundColor: "#ff6347", // Tomato red background
+    borderRadius: 10,
+    marginBottom: 20,
+  },
 });

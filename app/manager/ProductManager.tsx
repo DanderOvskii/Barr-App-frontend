@@ -14,6 +14,7 @@ import {
   updateProduct,
   deleteProduct,
   createProduct,
+  createCategory,
 } from "../../backend/getData";
 import { Product, CategoryWithProducts, DisplayProduct } from "../types";
 export default function ProductManager() {
@@ -25,6 +26,8 @@ export default function ProductManager() {
   const [editedProduct, setEditedProduct] = useState<Product | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [isAddingCategory, setIsAddingCategory] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState("");
 
   const currentCategoryProducts =
     selectedCategory && categories?.length > 0
@@ -216,7 +219,7 @@ export default function ProductManager() {
   };
 
   //--------------------------------------------------------------------------------
-  const handeledelete = async () => {
+  const handeleDelete = async () => {
     if (!selectedProduct) return;
 
     try {
@@ -237,6 +240,25 @@ export default function ProductManager() {
       Alert.alert("Error", "Failed to delete product");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleAddCatogory = async () => {
+    if (isAddingCategory && newCategoryName.trim()) {
+      try {
+        const newCategory = await createCategory({
+          name: newCategoryName.trim(),
+        });
+        setCategories([...categories, { ...newCategory, products: [] }]);
+        setNewCategoryName("");
+        setIsAddingCategory(false);
+        Alert.alert("Success", "Category added successfully");
+      } catch (error) {
+        console.error("Error creating category:", error);
+        Alert.alert("Error", "Failed to create category");
+      }
+    } else {
+      setIsAddingCategory(true);
     }
   };
 
@@ -261,9 +283,42 @@ export default function ProductManager() {
               <Text style={styles.buttonText}>{category.name}</Text>
             </TouchableOpacity>
           ))}
-          <TouchableOpacity style={styles.addButton}>
-            <Text style={styles.buttonText}>+</Text>
-          </TouchableOpacity>
+          {isAddingCategory ? (
+            <View style={styles.addCategoryContainer}>
+              <TextInput
+                style={styles.input}
+                value={newCategoryName}
+                onChangeText={setNewCategoryName}
+                placeholder="Category name"
+                placeholderTextColor="#999"
+                autoFocus
+              />
+              <View style={styles.addCategoryButtons}>
+                <TouchableOpacity
+                  style={[styles.cancleButton, { flex: 1 }]}
+                  onPress={() => {
+                    setIsAddingCategory(false);
+                    setNewCategoryName("");
+                  }}
+                >
+                  <Text style={styles.buttonText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.button, { flex: 1 }]}
+                  onPress={handleAddCatogory}
+                >
+                  <Text style={styles.buttonText}>Save</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => setIsAddingCategory(true)}
+            >
+              <Text style={styles.buttonText}>+</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Products Column */}
@@ -274,26 +329,26 @@ export default function ProductManager() {
             contentContainerStyle={{ flexGrow: 1 }}
             showsVerticalScrollIndicator={true}
           >
-          {currentCategoryProducts.map((product) => (
-            <TouchableOpacity
-              key={product.id}
-              style={[
-                styles.button,
-                selectedProduct?.id === product.id && styles.selectedButton,
-              ]}
-              onPress={() => setSelectedProduct(product)}
-            >
-              <Text style={styles.buttonText}>{product.name}</Text>
-            </TouchableOpacity>
-          ))}
-          {selectedCategory && (
-            <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => selectedCategory && addProduct(selectedCategory)}
-            >
-              <Text style={styles.buttonText}>+</Text>
-            </TouchableOpacity>
-          )}
+            {currentCategoryProducts.map((product) => (
+              <TouchableOpacity
+                key={product.id}
+                style={[
+                  styles.button,
+                  selectedProduct?.id === product.id && styles.selectedButton,
+                ]}
+                onPress={() => setSelectedProduct(product)}
+              >
+                <Text style={styles.buttonText}>{product.name}</Text>
+              </TouchableOpacity>
+            ))}
+            {selectedCategory && (
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={() => selectedCategory && addProduct(selectedCategory)}
+              >
+                <Text style={styles.buttonText}>+</Text>
+              </TouchableOpacity>
+            )}
           </ScrollView>
         </View>
 
@@ -408,7 +463,7 @@ export default function ProductManager() {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.deleteButton, isSaving && styles.deleteButton]}
-                onPress={handeledelete}
+                onPress={handeleDelete}
                 disabled={isSaving}
               >
                 <Text style={styles.buttonText}>delete</Text>
@@ -477,6 +532,27 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 2,
   },
+  cancleButton: {
+    width: "100%",
+    padding: 15,
+    backgroundColor: "#ff6347",
+    borderRadius: 10,
+    marginBottom: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  deleteButton: {
+    width: "100%",
+    padding: 15,
+    backgroundColor: "#dc3545",
+    borderRadius: 10,
+    marginTop: 20,
+    alignItems: "center",
+  },
   buttonText: {
     fontSize: 16,
     color: "white",
@@ -528,25 +604,17 @@ const styles = StyleSheet.create({
   savingButton: {
     backgroundColor: "#999",
   },
-  cancleButton: {
-    width: "100%",
-    padding: 15,
-    backgroundColor: "#ff6347",
-    borderRadius: 10,
-    marginTop: 20,
-    alignItems: "center",
-  },
-  deleteButton: {
-    width: "100%",
-    padding: 15,
-    backgroundColor: "#dc3545",
-    borderRadius: 10,
-    marginTop: 20,
-    alignItems: "center",
-  },
   scrollableColumn: {
     flexGrow: 1, // Changed from flex: 1
     width: "100%",
     height: "100%",
+  },
+  addCategoryContainer: {
+    width: "100%",
+    gap: 10,
+  },
+  addCategoryButtons: {
+    flexDirection: "row",
+    gap: 10,
   },
 });

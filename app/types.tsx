@@ -35,3 +35,9 @@ export type user = {
   username: string;
   wallet: number;
 }
+
+export type updateUserType ={
+  username: string;
+  password?: string;
+  wallet: number;
+}

@@ -62,8 +62,7 @@ export default function Home() {
 
   return (
     <View style={styles.container}>
-      
-<Header/>
+      <Header />
       <SearchBar
         placeholder="Search categories..."
         onSelectItem={(Product) => handleInfoPress(Product)}
@@ -87,6 +86,12 @@ export default function Home() {
         onPress={() => router.push("../manager/ProductManager")}
       >
         <Text style={styles.name}>ProductManager</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push("../manager/accountManager")}
+      >
+        <Text style={styles.name}>Account Settings</Text>
       </TouchableOpacity>
     </View>
   );
