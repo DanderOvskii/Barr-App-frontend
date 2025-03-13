@@ -1,6 +1,8 @@
 import { Stack,useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import { Text, TouchableOpacity } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons';
+
 function useProtectedRoute() {
   const segments = useSegments();
   const router = useRouter();
@@ -24,28 +26,27 @@ function useProtectedRoute() {
 export default function RootLayout() {
   const router = useRouter();
   useProtectedRoute();
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.replace("/(login)/login");
+
+  const handleSettingPress = () => {
+    router.push("More");
   };
-  const LogoutButton = () => (
-    <TouchableOpacity 
-      onPress={handleLogout}
-      style={{ marginRight: 15 }}
-    >
-      <Text style={{ color: '#ff6347', fontSize: 16 }}>Logout</Text>
-    </TouchableOpacity>
+  const SettingButton = () => (
+    
+     <TouchableOpacity style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end', marginRight: 15 }} onPress={handleSettingPress}> 
+     <MaterialIcons name="settings" size={30} color="black" />
+   </TouchableOpacity>
   );
 
   return (
     <Stack initialRouteName="(login)/login">
       <Stack.Screen name="(login)/login" options={{ headerShown: false }} />
       <Stack.Screen name="(login)/signup" options={{ headerShown: false }} />
-      <Stack.Screen name="Home" options={{ title: "Home", headerRight: () => <LogoutButton />}} />
+      <Stack.Screen name="Home" options={{ title: "Home", headerRight: () => <SettingButton />}} />
       <Stack.Screen name="Products" options={{ title: "Products" }} />
       <Stack.Screen name="manager/ProductManager" options={{ title: "Product Manager" }} />
       <Stack.Screen name="ProductInfo" options={{ title: "Info" }} />
       <Stack.Screen name="manager/accountManager" options={{ title: "Account Settings" }} />
-    </Stack>
+      <Stack.Screen name="More" options={{title:"More"}} />   
+      </Stack>
   );
 }

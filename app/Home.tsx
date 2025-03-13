@@ -91,7 +91,7 @@ export default function Home() {
         style={styles.button}
         onPress={() => router.push("../manager/accountManager")}
       >
-        <Text style={styles.name}>Account Settings</Text>
+        <Text style={styles.name}>AccountMamager</Text>
       </TouchableOpacity>
     </View>
   );

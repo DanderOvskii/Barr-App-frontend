@@ -3,9 +3,11 @@ import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { user } from "../types";
+
 export default function Header({ user }: { user?: user }) {
   const [userData, setUserData] = useState<user>();
   const router = useRouter();
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {

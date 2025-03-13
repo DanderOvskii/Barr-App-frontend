@@ -15,7 +15,8 @@ import {
   deleteProduct,
   createProduct,
   createCategory,
-} from "../../backend/getData";
+  deleteCategory
+} from "../../backend/productmanagerAPI";
 import { Product, CategoryWithProducts, DisplayProduct } from "../types";
 export default function ProductManager() {
   console.log("ProductManager rendered");
@@ -219,7 +220,7 @@ export default function ProductManager() {
   };
 
   //--------------------------------------------------------------------------------
-  const handeleDelete = async () => {
+  const handeleDeleteProduct = async () => {
     if (!selectedProduct) return;
 
     try {
@@ -259,6 +260,23 @@ export default function ProductManager() {
       }
     } else {
       setIsAddingCategory(true);
+    }
+  };
+
+  const handeleDeleteCategory = async () => {
+    if (!selectedCategory) return;
+    try {
+      setIsSaving(true);
+      await deleteCategory(selectedCategory);
+      // Refresh the product list after deletion
+      const updatedData = await getAllData();
+      setCategories(updatedData);
+      
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      Alert.alert("Error", "Failed to delete product");
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -319,6 +337,13 @@ export default function ProductManager() {
               <Text style={styles.buttonText}>+</Text>
             </TouchableOpacity>
           )}
+          <TouchableOpacity
+            style={[styles.deleteButton, isSaving && styles.deleteButton]}
+            onPress={handeleDeleteCategory}
+            disabled={isSaving}
+          >
+            <Text style={styles.buttonText}>delete</Text>
+          </TouchableOpacity>
         </View>
 
         {/* Products Column */}
@@ -463,7 +488,7 @@ export default function ProductManager() {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.deleteButton, isSaving && styles.deleteButton]}
-                onPress={handeleDelete}
+                onPress={handeleDeleteProduct}
                 disabled={isSaving}
               >
                 <Text style={styles.buttonText}>delete</Text>
@@ -519,6 +544,19 @@ const styles = StyleSheet.create({
   selectedButton: {
     backgroundColor: "#2e7d32", // darker green for selected state
   },
+  saveButton: {
+    width: "100%",
+    padding: 15,
+    backgroundColor: "#4caf50",
+    borderRadius: 10,
+    marginBottom: 10,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
   addButton: {
     width: "100%",
     padding: 15,
@@ -550,8 +588,13 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: "#dc3545",
     borderRadius: 10,
-    marginTop: 20,
+    marginBottom: 10,
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   buttonText: {
     fontSize: 16,
@@ -593,14 +636,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
   },
-  saveButton: {
-    width: "100%",
-    padding: 15,
-    backgroundColor: "#4caf50",
-    borderRadius: 10,
-    marginTop: 20,
-    alignItems: "center",
-  },
+
   savingButton: {
     backgroundColor: "#999",
   },
