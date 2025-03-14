@@ -6,6 +6,7 @@ export default function More() {
   const router = useRouter();
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("isAdmin");
     router.replace("/(login)/login");
   };
 
@@ -27,10 +28,17 @@ export default function More() {
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={styles.categoryButton}
-          onPress={() => handleLogout()}
-        >
-          <Text style={styles.categoryButtonText}>logout</Text>
+          style={styles.adminButton}
+          onPress={() => router.push("../manager/ProductManager")}
+          >
+          <Text style={styles.categoryButtonText}>ProductManager</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.adminButton}
+          onPress={() => router.push("../manager/accountManager")}
+          >
+          <Text style={styles.categoryButtonText}>AccountManager</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -78,6 +86,19 @@ const styles = StyleSheet.create({
     width: "80%",
     padding: 15,
     backgroundColor: "#dc3545", // Green background
+    borderRadius: 10,
+    marginBottom: 15,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 2, // For Android shadow
+  },
+  adminButton: {
+    width: "80%",
+    padding: 15,
+    backgroundColor: "#ff6347", // Green background
     borderRadius: 10,
     marginBottom: 15,
     alignItems: "center",

@@ -81,18 +81,6 @@ export default function Home() {
             </TouchableOpacity>
           ))}
       </View>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("../manager/ProductManager")}
-      >
-        <Text style={styles.name}>ProductManager</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => router.push("../manager/accountManager")}
-      >
-        <Text style={styles.name}>AccountMamager</Text>
-      </TouchableOpacity>
     </View>
   );
 }

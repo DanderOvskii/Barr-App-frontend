@@ -34,6 +34,7 @@ export type user = {
   id: number;
   username: string;
   wallet: number;
+  isAdmin: boolean;
 }
 
 export type updateUserType ={

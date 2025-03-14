@@ -9,14 +9,20 @@ function useProtectedRoute() {
 
   useEffect(() => {
     const inAuthGroup = segments[0] === "(login)";
+    const isManagerGroup = segments[0] === "manager";
+
     
     // Check if user is authenticated
     const token = localStorage.getItem("token");
+    const isAdmin = localStorage.getItem("isAdmin") === "true";
     
     if (!inAuthGroup && !token) {
       // Redirect to login only if not authenticated and not in login group
       router.replace("/(login)/login");
     } else if (inAuthGroup && token) {
+      // Redirect to home if authenticated and trying to access login
+      router.replace("/Home");
+    }else if (isManagerGroup && !isAdmin) {
       // Redirect to home if authenticated and trying to access login
       router.replace("/Home");
     }

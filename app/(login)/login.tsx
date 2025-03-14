@@ -36,8 +36,8 @@ export default function login() {
       // Example: await SecureStore.setItemAsync('userToken', response.token);
 
       // Navigate to main screen
-      console.log("token response", response.access_token);
       localStorage.setItem("token", response.access_token);
+
       router.push("/Home");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Login failed";

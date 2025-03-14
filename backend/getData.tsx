@@ -100,6 +100,11 @@ export const getCurrentUser = async () => {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
+
+    if (response.data.isAdmin !== undefined) {
+      localStorage.setItem("isAdmin", response.data.isAdmin.toString());
+    }
+    console.log(response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
