@@ -15,7 +15,7 @@ export const BASE_URLS: BaseURLConfig = {
 };
 
 // Export the current base URL
-export let currentBaseURL = BASE_URLS.LOCAL;
+export let currentBaseURL = BASE_URLS.IP_10;
 
 // Function to set base URL with validation
 export const setBaseURL = (url: string): void => {

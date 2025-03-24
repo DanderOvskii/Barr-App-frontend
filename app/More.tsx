@@ -1,14 +1,17 @@
 import react from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Stack, useRouter, useSegments } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function More() {
   const router = useRouter();
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("isAdmin");
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem("token");
+    await AsyncStorage.removeItem("isAdmin");
     router.replace("/(login)/login");
+   
   };
+  
 
   return (
     <View style={styles.container}>
@@ -26,7 +29,7 @@ export default function More() {
         >
           <Text style={styles.categoryButtonText}>your stats</Text>
         </TouchableOpacity>
-
+    
         <TouchableOpacity
           style={styles.adminButton}
           onPress={() => router.push("../manager/ProductManager")}

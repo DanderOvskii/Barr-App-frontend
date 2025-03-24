@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Product, Category } from "../app/types";
 import { currentBaseURL } from "./bateUrl";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const getProducts = async (categoryId: number) => {
   try {
@@ -97,14 +98,9 @@ export const getCurrentUser = async () => {
   try {
     const response = await axios.get(`${currentBaseURL}/users/me`, {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
       },
     });
-
-    if (response.data.isAdmin !== undefined) {
-      localStorage.setItem("isAdmin", response.data.isAdmin.toString());
-    }
-    console.log(response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -124,7 +120,7 @@ export const buyProduct = async (productId: number) => {
       null,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
         },
       }
     );
@@ -150,7 +146,7 @@ export const updateUser = async (userData: {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
         },
       }
     );

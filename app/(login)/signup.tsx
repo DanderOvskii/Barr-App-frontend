@@ -10,6 +10,7 @@ import {
 import { registerUser } from "../../backend/getData";
 import { useRouter } from "expo-router";
 import CustomDatePicker from './datepicker';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function signup() {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -37,7 +38,7 @@ export default function signup() {
     setIsLoading(true);
     try {
       const response = await registerUser(username, password,birthdate);
-      localStorage.setItem("token", response.access_token);
+      await AsyncStorage.setItem("token", response.access_token);
       router.push("/Home");
     } catch (error: any) {
       setError(error.message);

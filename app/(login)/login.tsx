@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { loginUser } from "../../backend/getData";
 import { useRouter } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function login() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function login() {
       // Example: await SecureStore.setItemAsync('userToken', response.token);
 
       // Navigate to main screen
-      localStorage.setItem("token", response.access_token);
+      await AsyncStorage.setItem("token", response.access_token);
 
       router.push("/Home");
     } catch (error) {

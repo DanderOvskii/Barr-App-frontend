@@ -12,21 +12,22 @@ import { Category, Product, user } from "./types";
 import SearchBar from "./components/SearchBar";
 import { currentBaseURL } from "../backend/bateUrl";
 import Header from "./components/header";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
     const Verifytoken = async () => {
-      const token = localStorage.getItem("token");
+      const token = await AsyncStorage.getItem("token");
       try {
-        const response = await fetch(`${currentBaseURL}/verify-token/${token}`);
+        const response = await fetch(`${currentBaseURL}/token/${token}`);
         if (!response.ok) {
           throw new Error("No token found");
         }
       } catch (error) {
         console.error("Error verifying token:", error);
-        localStorage.removeItem("token");
+        AsyncStorage.removeItem("token");
         router.replace("/(login)/login");
       }
     };
