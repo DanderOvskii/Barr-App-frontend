@@ -43,7 +43,6 @@ export default function Producten() {
     });
   };
 
-  console.log(data);
   return (
     <View style={styles.container}>
     <Header />

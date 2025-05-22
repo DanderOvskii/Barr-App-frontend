@@ -17,22 +17,22 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function Home() {
   const router = useRouter();
 
-  useEffect(() => {
-    const Verifytoken = async () => {
-      const token = await AsyncStorage.getItem("token");
-      try {
-        const response = await fetch(`${currentBaseURL}/token/${token}`);
-        if (!response.ok) {
-          throw new Error("No token found");
-        }
-      } catch (error) {
-        console.error("Error verifying token:", error);
-        AsyncStorage.removeItem("token");
-        router.replace("/(login)/login");
-      }
-    };
-    Verifytoken();
-  }, []);
+  // useEffect(() => {
+  //   const Verifytoken = async () => {
+  //     const token = await AsyncStorage.getItem("token");
+  //     try {
+  //       const response = await fetch(`${currentBaseURL}/verify-token/${token}`);
+  //       if (!response.ok) {
+  //         throw new Error("No token found");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error verifying token:", error);
+  //       AsyncStorage.removeItem("token");
+  //       router.replace("/(login)/login");
+  //     }
+  //   };
+  //   Verifytoken();
+  // }, []);
   const navigateTo = (id: number) => {
     router.push(`/Products?id=${id}`);
   };
@@ -53,7 +53,6 @@ export default function Home() {
     fetchData();
   }, []);
 
-  console.log(data);
   const handleInfoPress = (product: Product) => {
     router.push({
       pathname: "/ProductInfo",

@@ -1,10 +1,20 @@
 import axios from "axios";
 import { Product, Category } from "../app/types";
 import { currentBaseURL } from "./bateUrl";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const getAuthHeaders = async () => {
+  const token = await AsyncStorage.getItem("token");
+  if (!token) throw new Error("No token found");
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+};
 export const getAllData = async () => {
   try {
-    const response = await axios.get(`${currentBaseURL}/ProductManager`);
+    const response = await axios.get(`${currentBaseURL}/ProductManager`,{
+      headers: await getAuthHeaders(),
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching categories:", error);
@@ -18,6 +28,7 @@ export const createCategory = async (categoryData: { name: string }) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        ...await getAuthHeaders(),
       },
       body: JSON.stringify(categoryData),
     });

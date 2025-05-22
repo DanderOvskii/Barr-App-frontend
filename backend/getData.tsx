@@ -3,10 +3,30 @@ import { Product, Category } from "../app/types";
 import { currentBaseURL } from "./bateUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+const getAuthHeaders = async () => {
+  const token = await AsyncStorage.getItem("token");
+  if (!token) throw new Error("No token found");
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+};
+export const getCategories = async () => {
+  try {
+    const response = await axios.get(`${currentBaseURL}/`, {
+      headers: await getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
+    throw error;
+  }
+};
 export const getProducts = async (categoryId: number) => {
   try {
     const response = await axios.get(
-      `${currentBaseURL}/Products?categoryId=${categoryId}`
+      `${currentBaseURL}/Products?categoryId=${categoryId}`,{
+        headers: await getAuthHeaders(),
+      }
     );
     return response.data;
   } catch (error) {
@@ -15,15 +35,6 @@ export const getProducts = async (categoryId: number) => {
   }
 };
 
-export const getCategories = async () => {
-  try {
-    const response = await axios.get(`${currentBaseURL}/`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    throw error;
-  }
-};
 
 export const searchProducts = async (query: string) => {
   try {
@@ -31,6 +42,7 @@ export const searchProducts = async (query: string) => {
       params: { q: query },
       headers: {
         "Content-Type": "application/json",
+        ...await getAuthHeaders(),
       },
     });
     return response.data;
@@ -97,9 +109,7 @@ export const loginUser = async (username: string, password: string) => {
 export const getCurrentUser = async () => {
   try {
     const response = await axios.get(`${currentBaseURL}/users/me`, {
-      headers: {
-        Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
-      },
+      headers: await getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
@@ -119,9 +129,7 @@ export const buyProduct = async (productId: number) => {
       `${currentBaseURL}/buy/${productId}`,
       null,
       {
-        headers: {
-          Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
-        },
+        headers: await getAuthHeaders(),
       }
     );
     return response.data;
@@ -146,7 +154,7 @@ export const updateUser = async (userData: {
       {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${await AsyncStorage.getItem("token")}`,
+          ...await getAuthHeaders(),
         },
       }
     );
@@ -161,4 +169,3 @@ export const updateUser = async (userData: {
     throw error;
   }
 };
-

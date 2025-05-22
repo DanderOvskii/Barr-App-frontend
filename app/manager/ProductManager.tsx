@@ -39,7 +39,7 @@ export default function ProductManager() {
       try {
         setIsLoading(true);
         const result = await getAllData();
-        console.log("gotDATATATA");
+        console.log("gotDATATATA",result);
         setCategories(result);
       } catch (error) {
         console.error("Error fetching data:", error);
