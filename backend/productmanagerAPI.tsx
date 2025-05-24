@@ -2,7 +2,7 @@ import axios from "axios";
 import { Product, Category } from "../app/types";
 import { currentBaseURL } from "./bateUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { handleApiError } from "./errorHandeling";
 const getAuthHeaders = async () => {
   const token = await AsyncStorage.getItem("token");
   if (!token) throw new Error("No token found");
@@ -17,8 +17,7 @@ export const getAllData = async () => {
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching categories:", error);
-    throw error;
+    handleApiError(error, "fetching all data");
   }
 };
 
@@ -92,6 +91,7 @@ export const updateProduct = async (
       {
         headers: {
           "Content-Type": "application/json",
+          ...await getAuthHeaders(),
         },
       }
     );
@@ -122,6 +122,7 @@ export const createProduct = async (newProduct: Partial<Product>) => {
       {
         headers: {
           "Content-Type": "application/json",
+          ...await getAuthHeaders(),
         },
       }
     );
@@ -153,6 +154,7 @@ export const deleteProduct = async (productId: number) => {
       {
         headers: {
           "Content-Type": "application/json",
+          ...await getAuthHeaders(),
         },
       }
     );
