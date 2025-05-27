@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { registerUser } from "../../backend/getData";
 import { useRouter } from "expo-router";
-import CustomDatePicker from './datepicker';
+import CustomDatePicker from '../components/datepicker';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export default function signup() {
   const router = useRouter();

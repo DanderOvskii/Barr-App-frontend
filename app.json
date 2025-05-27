@@ -32,7 +32,27 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-font"
+    ],
+    "fonts": [
+      {
+        "asset": "./assets/fonts/Roboto-Bold.ttf",
+        "family": "Roboto-bold"
+      },
+      {
+        "asset": "./assets/fonts/Roboto-Regular.ttf",
+        "family": "Roboto"	
+      },
+      {
+        "asset": "./assets/fonts/Resolve-BlackWd.otf",
+        "family": "Resolve-BlackWd"
+      },
+      {
+        "asset": "./assets/fonts/AtomicMarker.otf",
+        "family": "AtomicMarker"
+      }
+
     ],
     "experiments": {
       "typedRoutes": true

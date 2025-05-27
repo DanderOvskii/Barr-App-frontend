@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Stack, useRouter, useSegments } from "expo-router";
+import {useRouter} from "expo-router";
 const router = useRouter();
 
 export const handleApiError = (error: unknown, context = "request"): never => {

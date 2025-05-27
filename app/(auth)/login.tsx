@@ -10,6 +10,7 @@ import {
 import { loginUser } from "../../backend/getData";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {ROUTES} from "@/navigation/navRoutes";
 
 export default function login() {
   const router = useRouter();
@@ -39,7 +40,7 @@ export default function login() {
       // Navigate to main screen
       await AsyncStorage.setItem("token", response.access_token);
 
-      router.push("/Home");
+      router.push(ROUTES.HOME);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Login failed";
       setError(message);
@@ -49,7 +50,7 @@ export default function login() {
   };
 
   const goToSighnUp = () => {
-    router.push("/(login)/signup");
+    router.push(ROUTES.AUTH.SIGNUP);
   };
 
   return (
