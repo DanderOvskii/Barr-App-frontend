@@ -6,7 +6,7 @@ export default function NotFoundScreen() {
     <>
       <Stack.Screen options={{ title: 'Oops! Not Found' }} />
       <View style={styles.container}>
-        <Link href="/(login)/login" style={styles.button}>
+        <Link href="/(auth)/login" style={styles.button}>
           Go back to Home screen!
         </Link>
       </View>

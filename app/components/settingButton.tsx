@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import { TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import AppColors from "../appColors";
 
 
   const handleSettingPress = () => {
@@ -14,6 +15,6 @@ import { MaterialIcons } from "@expo/vector-icons";
       }}
       onPress={handleSettingPress}
     >
-      <MaterialIcons name="settings" size={30} color="black" />
+      <MaterialIcons name="settings" size={30} color={AppColors.text}/>
     </TouchableOpacity>
   );

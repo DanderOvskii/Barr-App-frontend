@@ -2,13 +2,13 @@ import react from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Stack, useRouter, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import {ROUTES} from "../../navigation/navRoutes"
 export default function More() {
   const router = useRouter();
   const handleLogout = async () => {
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("isAdmin");
-    router.replace("/(login)/login");
+    router.replace(ROUTES.AUTH.LOGIN);
    
   };
   
@@ -58,7 +58,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f0f8ff", // Light blue background
-    padding: 20,
+     paddingLeft: 20,
+    paddingRight: 20,
   },
   header: {
     flexDirection: "row",

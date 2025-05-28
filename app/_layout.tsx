@@ -1,10 +1,9 @@
 // app/_layout.tsx
 
-import { Slot, useRouter, useSegments,Stack } from "expo-router";
+import { Slot, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ROUTES } from "@/navigation/navRoutes";
-import { SettingButton } from "./components/settingButton";
 
 function useProtectedRoute() {
   const segments = useSegments();
@@ -13,7 +12,7 @@ function useProtectedRoute() {
   useEffect(() => {
     const checkAuth = async () => {
       const inAuthGroup = segments[0] === "(auth)";
-      const isManagerGroup = segments[0] === "manager";
+      const isManagerGroup = segments[0] === "(manager)";
 
       const token = await AsyncStorage.getItem("token");
       const isAdmin = true; // Replace with actual check
@@ -34,13 +33,6 @@ function useProtectedRoute() {
 export default function RootLayout() {
   useProtectedRoute();
   return (
-    <Stack
-      screenOptions={{
-        headerStyle: { backgroundColor: "#fff" },
-        headerTintColor: "black",
-        headerTitleAlign: "center",
-        headerRight: () => <SettingButton />
-      }}
-    />
+    <Slot/>
   );
 }

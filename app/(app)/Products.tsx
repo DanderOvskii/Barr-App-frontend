@@ -8,11 +8,11 @@ import {
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useRouter } from "expo-router";
-import { getProducts, buyProduct } from "../backend/getData";
-import { Product } from "./types";
-import SearchBar from "./components/SearchBar";
-import BuyButton from "./components/buyButton";
-import Header from "./components/header";
+import { getProducts, buyProduct } from "../../backend/getData";
+import { Product } from "../types";
+import SearchBar from "../components/SearchBar";
+import BuyButton from "../components/buyButton";
+import Header from "../components/header";
 
 type RouteParams = {
   id: number; // Assuming id is a number, adjust if it's a string
@@ -76,7 +76,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f0f8ff", // Light blue background
-    padding: 20,
+     paddingLeft: 20,
+    paddingRight: 20,
   },
   header: {
     flexDirection: "row",

@@ -10,7 +10,7 @@ export const ROUTES = {
   PRODUCT_INFO: "/ProductInfo",
   MORE: "/More",
   MANAGER: {
-    PRODUCT_MANAGER: "/manager/ProductManager",
-    ACCOUNT_MANAGER: "/manager/accountManager",
+    PRODUCT_MANAGER: "/(manager)/ProductManager",
+    ACCOUNT_MANAGER: "/(manager)/accountManager",
   },
 } as const;

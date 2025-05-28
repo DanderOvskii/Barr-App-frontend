@@ -10,7 +10,9 @@ import {
 import { loginUser } from "../../backend/getData";
 import { useRouter } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {ROUTES} from "@/navigation/navRoutes";
+import { ROUTES } from "@/navigation/navRoutes";
+import AppColors from "../appColors";
+import GeneralButton from "../components/GeneralButton";
 
 export default function login() {
   const router = useRouter();
@@ -40,7 +42,7 @@ export default function login() {
       // Navigate to main screen
       await AsyncStorage.setItem("token", response.access_token);
 
-      router.push(ROUTES.HOME);
+      router.replace(ROUTES.HOME);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Login failed";
       setError(message);
@@ -74,23 +76,18 @@ export default function login() {
         editable={!isLoading}
       />
       {error && <Text style={styles.error}>{error}</Text>}
-      <TouchableOpacity
-        style={[styles.button, isLoading && styles.buttonDisabled]}
+      <GeneralButton
+        title={isLoading ? "" : "Login"}
         onPress={handleLogin}
         disabled={isLoading}
-      >
-        {isLoading ? (
-          <ActivityIndicator color="white" />
-        ) : (
-          <Text style={styles.buttonText}>Login</Text>
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, isLoading && styles.buttonDisabled]}
-        onPress={() => goToSighnUp()}
-      >
-        <Text style={styles.buttonText}>signup</Text>
-      </TouchableOpacity>
+      />
+       
+
+      <GeneralButton
+        title="Sign Up"
+        disabled={isLoading}
+        onPress={goToSighnUp}
+      />
     </View>
   );
 }
@@ -100,13 +97,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#f0f8ff",
+    backgroundColor: AppColors.background,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
+    color: AppColors.text,
   },
   input: {
     backgroundColor: "white",
@@ -116,24 +114,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ddd",
   },
-  button: {
-    backgroundColor: "#4caf50",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonDisabled: {
-    backgroundColor: "#cccccc",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+ 
   error: {
     color: "red",
-    marginBottom: 10,
+    marginBottom: 20,
     textAlign: "center",
   },
 });

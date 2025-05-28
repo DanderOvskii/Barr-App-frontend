@@ -11,6 +11,7 @@ import {
 import { getCategories } from "../../backend/getData";
 import { Product } from "../types";
 import { searchProducts } from '../../backend/getData';
+import AppColors from "../appColors";
 
 interface SearchBarProps {
   placeholder?: string;

@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from  'expo-router';
-import { Product } from './types';
-import BuyButton from './components/buyButton';
-import Header from './components/header';
+import { Product } from '../types';
+import BuyButton from '../components/buyButton';
+import Header from '../components/header';
 
 
 export default function ProductInfo() {
@@ -38,7 +38,8 @@ export default function ProductInfo() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+     paddingLeft: 20,
+    paddingRight: 20,
     backgroundColor: '#f0f8ff',
     paddingHorizontal: "10%",
   },

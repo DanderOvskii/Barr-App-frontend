@@ -7,13 +7,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { getCategories, getCurrentUser } from "../backend/getData";
-import { Category, Product, user } from "./types";
-import SearchBar from "./components/SearchBar";
-import { currentBaseURL } from "../backend/bateUrl";
-import Header from "./components/header";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { getCategories, getCurrentUser } from "../../backend/getData";
+import { Category, Product, user } from "../types";
+import SearchBar from "../components/SearchBar";
+import { currentBaseURL } from "../../backend/bateUrl";
+import Header from "../components/header";
+import AppColors from "../appColors";
 export default function Home() {
   const router = useRouter();
 
@@ -87,8 +86,9 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f8ff", // Light blue background
-    padding: 20,
+    backgroundColor: AppColors.background, // Light blue background
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   header: {
     flexDirection: "row",
