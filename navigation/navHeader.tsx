@@ -1,17 +1,19 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter, useNavigation } from "expo-router";
+import { useRouter, useNavigation, usePathname } from "expo-router";
 import AppColors from "../app/appColors";
-import { SettingButton } from "../app/components/settingButton";
+import SettingButton  from "../app/components/settingButton";
+import {ROUTES} from "../navigation/navRoutes"
 
 export function CustomHeader({ title }: { title: string }) {
   const router = useRouter();
   const navigation = useNavigation();
+  const pathname = usePathname();
 
   return (
     <View style={styles.container}>
       <View style={styles.leftContainer}>
-        {navigation.canGoBack() ? (
+        {navigation.canGoBack() && pathname !== ROUTES.HOME ? (
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons
               name="arrow-back"

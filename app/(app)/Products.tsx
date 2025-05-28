@@ -9,7 +9,7 @@ import {
 import { useRoute } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { getProducts, buyProduct } from "../../backend/getData";
-import { Product } from "../types";
+import { Product } from "../_types";
 import SearchBar from "../components/SearchBar";
 import BuyButton from "../components/buyButton";
 import Header from "../components/header";

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
-import { Product } from '../types';
+import { Product } from '../_types';
 import { buyProduct } from '../../backend/getData';
 import { useRouter } from 'expo-router';
 

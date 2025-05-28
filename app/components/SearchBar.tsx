@@ -9,7 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import { getCategories } from "../../backend/getData";
-import { Product } from "../types";
+import { Product } from "../_types";
 import { searchProducts } from '../../backend/getData';
 import AppColors from "../appColors";
 
@@ -71,18 +71,18 @@ const SearchBar: React.FC<SearchBarProps> = ({
   }, [searchQuery]);
 
   const handleItemPress = (item: Product) => {
-    setSearchQuery(item.name);
-    setShowResults(false);
     if (onSelectItem) {
       onSelectItem(item);
     }
+    setSearchQuery("");
+    setShowResults(false);
   };
   return (
     <View style={[styles.container, style]}>
       <TextInput
         style={styles.input}
         placeholder={placeholder}
-        placeholderTextColor="#999"
+        placeholderTextColor={AppColors.black}
         value={searchQuery}
         onChangeText={setSearchQuery}
         autoCapitalize="none"
@@ -109,47 +109,32 @@ const SearchBar: React.FC<SearchBarProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    padding: 10,
     zIndex: 1,
   },
   input: {
-    backgroundColor: "white",
-    padding: 15,
-    borderRadius: 10,
-    fontSize: 16,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+    backgroundColor: AppColors.primary,
+    fontSize: 20,
+    fontFamily:"Roboto-bold",
   },
   resultsList: {
     position: 'absolute', // Changed to absolute
     top: '100%', // Position below search input
     left: 10,
     right: 10,
-    backgroundColor: "white",
-    borderRadius: 10,
+    backgroundColor: AppColors.background,
     maxHeight: 200,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
-    elevation: 5,
+    borderWidth: 2,
+    borderColor: AppColors.primary,
     zIndex: 1000, // Higher than container
   },
   resultItem: {
     padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomWidth: 2,
+    borderBottomColor: AppColors.primary,
   },
   resultText: {
-    fontSize: 16,
-    color: "#333",
+    fontSize: 20,
+    color: AppColors.text,
   },
 });
 

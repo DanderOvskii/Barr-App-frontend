@@ -17,7 +17,7 @@ import {
   createCategory,
   deleteCategory
 } from "../../backend/productmanagerAPI";
-import { Product, CategoryWithProducts, DisplayProduct } from "../types";
+import { Product, CategoryWithProducts, DisplayProduct } from "../_types";
 export default function ProductManager() {
   console.log("ProductManager rendered");
   const [categories, setCategories] = useState<CategoryWithProducts[]>([]);

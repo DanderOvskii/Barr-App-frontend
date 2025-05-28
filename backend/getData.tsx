@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Product, Category } from "../app/types";
+import { Product, Category } from "../app/_types";
 import { currentBaseURL } from "./bateUrl";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 

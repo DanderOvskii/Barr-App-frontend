@@ -1,13 +1,14 @@
 // app/manager/_layout.tsx
 
 import { Stack } from "expo-router";
+import { CustomHeader } from "../../navigation/navHeader";
 
 export default function ManagerLayout() {
   return  <Stack
-      screenOptions={{
-        headerStyle: { backgroundColor: "#f2f2f2" },
-        headerTintColor: "#333",
-        title: "Manager Panel",
-      }}
-    />;
+        screenOptions={({ route }) => ({
+          header: () => <CustomHeader title={route.name} />,
+          animation: "slide_from_right",
+          presentation: "card",
+        })}
+      />;
 }

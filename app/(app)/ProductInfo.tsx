@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from  'expo-router';
-import { Product } from '../types';
+import { Product } from '../_types';
 import BuyButton from '../components/buyButton';
 import Header from '../components/header';
 

@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { getCurrentUser, updateUser } from "../../backend/getData";
-import { user } from "../types";
+import { user } from "../_types";
 import Header from "../components/header";
 
 export default function AccountManager() {

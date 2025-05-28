@@ -2,7 +2,7 @@ import { getCurrentUser } from "@/backend/getData";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
-import { user } from "../types";
+import { user } from "../_types";
 import AppColors from "../appColors";
 import { ROUTES } from "../../navigation/navRoutes";
 

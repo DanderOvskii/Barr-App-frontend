@@ -8,11 +8,11 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { getCategories, getCurrentUser } from "../../backend/getData";
-import { Category, Product, user } from "../types";
+import { Category, Product, user } from "../_types";
 import SearchBar from "../components/SearchBar";
-import { currentBaseURL } from "../../backend/bateUrl";
 import Header from "../components/header";
 import AppColors from "../appColors";
+import GeneralButton from "../components/GeneralButton";
 export default function Home() {
   const router = useRouter();
 
@@ -63,7 +63,7 @@ export default function Home() {
     <View style={styles.container}>
       <Header />
       <SearchBar
-        placeholder="Search categories..."
+        placeholder="Search..."
         onSelectItem={(Product) => handleInfoPress(Product)}
       />
 
@@ -72,12 +72,11 @@ export default function Home() {
       <View style={styles.categoryContainer}>
         {data &&
           data.map((categorie) => (
-            <TouchableOpacity
-              style={styles.categoryButton}
+            <GeneralButton
               onPress={() => navigateTo(categorie.id)}
-            >
-              <Text style={styles.categoryButtonText}>{categorie.name}</Text>
-            </TouchableOpacity>
+              title={categorie.name.toUpperCase()}
+            />
+              
           ))}
       </View>
     </View>
@@ -90,44 +89,17 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
   },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    backgroundColor: "#ff6347", // Tomato red background
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  button: {
-    minWidth: 100,
-    alignSelf: "center",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 10,
-    backgroundColor: "#ff6347", // Tomato red background
-    borderRadius: 10,
-    marginBottom: 20,
-    elevation: 2,
-  },
-  name: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "white",
-  },
-  balance: {
-    fontSize: 20,
-    color: "white",
-  },
+ 
 
   categoryHeader: {
     fontSize: 24,
-    color: "#555",
+    color: AppColors.text,
     marginBottom: 10,
     textAlign: "center",
+    marginTop: 40,
   },
   categoryContainer: {
-    alignItems: "center",
+    flex: 1,
   },
   categoryButton: {
     width: "80%",

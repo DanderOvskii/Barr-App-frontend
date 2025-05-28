@@ -7,7 +7,7 @@ import AppColors from "../appColors";
   const handleSettingPress = () => {
     router.push("/More");
   };
-  export const SettingButton = () => (
+  const SettingButton = () => (
     <TouchableOpacity
       style={{
         marginRight: 8,
@@ -18,3 +18,4 @@ import AppColors from "../appColors";
       <MaterialIcons name="settings" size={30} color={AppColors.text}/>
     </TouchableOpacity>
   );
+  export default SettingButton;

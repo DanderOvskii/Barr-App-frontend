@@ -32,7 +32,7 @@ export default function More() {
     
         <TouchableOpacity
           style={styles.adminButton}
-          onPress={() => router.push("../manager/ProductManager")}
+          onPress={() => router.push(ROUTES.MANAGER.PRODUCT_MANAGER)}
           >
           <Text style={styles.categoryButtonText}>ProductManager</Text>
         </TouchableOpacity>
