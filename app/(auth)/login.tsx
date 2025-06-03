@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ROUTES } from "@/navigation/navRoutes";
 import AppColors from "../appColors";
 import GeneralButton from "../components/GeneralButton";
+import CustomTextInput from "../components/textInput";
 
 export default function login() {
   const router = useRouter();
@@ -58,21 +59,19 @@ export default function login() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Login</Text>
-      <TextInput
+      <CustomTextInput
         style={styles.input}
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
-        autoCapitalize="none"
         editable={!isLoading}
       />
-      <TextInput
+      <CustomTextInput
         style={styles.input}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
-        secureTextEntry
-        autoCapitalize="none"
+        secureTextEntry={true}
         editable={!isLoading}
       />
       {error && <Text style={styles.error}>{error}</Text>}
@@ -107,12 +106,9 @@ const styles = StyleSheet.create({
     color: AppColors.text,
   },
   input: {
-    backgroundColor: "white",
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
-    borderWidth: 1,
-    borderColor: "#ddd",
   },
  
   error: {

@@ -12,6 +12,7 @@ import { getCategories } from "../../backend/getData";
 import { Product } from "../_types";
 import { searchProducts } from '../../backend/getData';
 import AppColors from "../appColors";
+import CustomTextInput from "./textInput";
 
 interface SearchBarProps {
   placeholder?: string;
@@ -79,14 +80,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
   return (
     <View style={[styles.container, style]}>
-      <TextInput
-        style={styles.input}
+      <CustomTextInput
         placeholder={placeholder}
-        placeholderTextColor={AppColors.black}
         value={searchQuery}
         onChangeText={setSearchQuery}
-        autoCapitalize="none"
-        autoCorrect={false}
       />
 
       {showResults && filteredData && (
@@ -110,11 +107,6 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     zIndex: 1,
-  },
-  input: {
-    backgroundColor: AppColors.primary,
-    fontSize: 20,
-    fontFamily:"Roboto-bold",
   },
   resultsList: {
     position: 'absolute', // Changed to absolute
