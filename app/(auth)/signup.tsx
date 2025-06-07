@@ -9,9 +9,13 @@ import {
 } from "react-native";
 import { registerUser } from "../../backend/getData";
 import { useRouter } from "expo-router";
-import CustomDatePicker from '../components/datepicker';
+import CustomDatePicker from "../components/datepicker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ROUTES } from "@/navigation/navRoutes";
+import GeneralButton from "../components/GeneralButton";
+import AppColors from "../appColors";
+import CustomTextInput from "../components/textInput";
+
 export default function signup() {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -35,10 +39,10 @@ export default function signup() {
 
   const handleSignup = async () => {
     if (!validation()) return;
-  
+
     setIsLoading(true);
     try {
-      const response = await registerUser(username, password,birthdate);
+      const response = await registerUser(username, password, birthdate);
       await AsyncStorage.setItem("token", response.access_token);
       router.replace(ROUTES.HOME);
     } catch (error: any) {
@@ -54,46 +58,38 @@ export default function signup() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>sighnup</Text>
-      <TextInput
+      <Text style={styles.title}>SIGN-UP</Text>
+      <CustomTextInput
         style={styles.input}
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
-        autoCapitalize="none"
         editable={!isLoading}
       />
-      <TextInput
+      <CustomTextInput
         style={styles.input}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        autoCapitalize="none"
         editable={!isLoading}
       />
-      <CustomDatePicker 
-  date={birthdate}
-  onDateChange={(selectedDate) => setBirthdate(selectedDate)}
-/>
+      <CustomDatePicker
+        date={birthdate}
+        onDateChange={(selectedDate) => setBirthdate(selectedDate)}
+      />
       {error && <Text style={styles.error}>{error}</Text>}
-      <TouchableOpacity
-        style={[styles.button, isLoading && styles.buttonDisabled]}
+      <GeneralButton
+        title={isLoading ? "" : "Sign Up"}
         onPress={handleSignup}
         disabled={isLoading}
-      >
-        {isLoading ? (
-          <ActivityIndicator color="white" />
-        ) : (
-          <Text style={styles.buttonText}>sighnup</Text>
-        )}
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.button, isLoading && styles.buttonDisabled]}
-        onPress={() => goToLogin()}
-      >
-        <Text style={styles.buttonText}>login</Text>
-      </TouchableOpacity>
+      />
+
+      <GeneralButton
+        title="Login"
+        disabled={isLoading}
+        onPress={goToLogin}
+      />
     </View>
   );
 }
@@ -103,36 +99,19 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    backgroundColor: "#f0f8ff",
+    backgroundColor: AppColors.background,
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
+    color: AppColors.text,
+    fontFamily: "Resolve-BlackWd",
   },
   input: {
-    backgroundColor: "white",
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
-    borderWidth: 1,
-    borderColor: "#ddd",
-  },
-  button: {
-    backgroundColor: "#4caf50",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    marginTop: 10,
-  },
-  buttonDisabled: {
-    backgroundColor: "#cccccc",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
   },
   error: {
     color: "red",

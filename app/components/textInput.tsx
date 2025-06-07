@@ -33,15 +33,6 @@ const CustomTextInput = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginVertical: 10,
-  },
-  label: {
-    marginBottom: 5,
-    fontSize: 16,
-    fontWeight: "500",
-    color: "#333",
-  },
   input: {
     backgroundColor: AppColors.primary,
     fontSize: 20,

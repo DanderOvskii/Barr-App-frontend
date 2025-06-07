@@ -3,6 +3,7 @@ import { TouchableOpacity, Text, Platform, StyleSheet } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import ReactDatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
+import AppColors from '../appColors';
 
 interface DatePickerProps {
   date: Date;
@@ -46,7 +47,7 @@ export const CustomDatePicker: React.FC<DatePickerProps> = ({ date, onDateChange
   return (
     <>
       <TouchableOpacity style={styles.input} onPress={() => setShowPicker(true)}>
-        <Text>{date.toLocaleDateString()}</Text>
+        <Text style={styles.date}>{date.toLocaleDateString()}</Text>
       </TouchableOpacity>
       {showPicker && (
         <DateTimePicker
@@ -69,13 +70,17 @@ export const CustomDatePicker: React.FC<DatePickerProps> = ({ date, onDateChange
 
 const styles = StyleSheet.create({
   input: {
-    backgroundColor: "white",
+    backgroundColor: AppColors.primary,
     padding: 15,
     borderRadius: 10,
     marginBottom: 15,
-    borderWidth: 1,
-    borderColor: "#ddd",
+    
+  },
+  date:{
+fontSize: 20,
+    fontFamily: "Roboto-bold",
   }
+
 });
 
 export default CustomDatePicker;

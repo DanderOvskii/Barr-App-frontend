@@ -43,7 +43,7 @@ export default function login() {
       // Navigate to main screen
       await AsyncStorage.setItem("token", response.access_token);
 
-      router.replace(ROUTES.HOME);
+      router.replace(ROUTES.APP.HOME);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Login failed";
       setError(message);
@@ -58,7 +58,7 @@ export default function login() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+      <Text style={styles.title}>LOGIN</Text>
       <CustomTextInput
         style={styles.input}
         placeholder="Username"
@@ -100,10 +100,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
     color: AppColors.text,
+    fontFamily: "Resolve-BlackWd",
   },
   input: {
     padding: 15,
