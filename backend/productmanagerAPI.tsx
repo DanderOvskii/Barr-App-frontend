@@ -1,18 +1,10 @@
-import axios from "axios";
 import { Product, Category } from "../app/_types";
 import { currentBaseURL } from "./bateUrl";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { handleApiError } from "./errorHandeling";
-const getAuthHeaders = async () => {
-  const token = await AsyncStorage.getItem("token");
-  if (!token) throw new Error("No token found");
-  return {
-    Authorization: `Bearer ${token}`,
-  };
-};
+import { api, handleApiError, logout, getAuthHeaders } from "./api";
+
 export const getAllData = async () => {
   try {
-    const response = await axios.get(`${currentBaseURL}/ProductManager`,{
+    const response = await api.get(`${currentBaseURL}/ProductManager`, {
       headers: await getAuthHeaders(),
     });
     return response.data;
@@ -23,23 +15,21 @@ export const getAllData = async () => {
 
 export const createCategory = async (categoryData: { name: string }) => {
   try {
-    const response = await fetch(`${currentBaseURL}/ProductManager/categories`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...await getAuthHeaders(),
-      },
-      body: JSON.stringify(categoryData),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to create category");
-    }
+    const response = await fetch(
+      `${currentBaseURL}/ProductManager/categories`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(await getAuthHeaders()),
+        },
+        body: JSON.stringify(categoryData),
+      }
+    );
 
     return await response.json();
   } catch (error) {
-    console.error("Error creating category:", error);
-    throw error;
+    handleApiError(error, "Failed to create category");
   }
 };
 
@@ -48,8 +38,7 @@ export const deleteCategory = async (categoryId: number) => {
     if (!categoryId) {
       throw new Error("Invalid product ID");
     }
-    console.log("Deleting category with ID:", categoryId);
-    const response = await axios.delete(
+    const response = await api.delete(
       `${currentBaseURL}/ProductManager/categories/${categoryId}`,
       {
         headers: {
@@ -57,20 +46,9 @@ export const deleteCategory = async (categoryId: number) => {
         },
       }
     );
-
-    if (response.status !== 200) {
-      throw new Error(`Server responded with status: ${response.status}`);
-    }
-
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("API Error:", error.response?.data);
-      throw new Error(
-        error.response?.data?.message || "Failed to delete product"
-      );
-    }
-    throw error;
+    handleApiError(error, "Failed to delete category");
   }
 };
 
@@ -85,61 +63,38 @@ export const updateProduct = async (
     }
 
     // Add proper error handling for the response
-    const response = await axios.put(
+    const response = await api.put(
       `${currentBaseURL}/ProductManager/${productId}`,
       updatedProduct,
       {
         headers: {
           "Content-Type": "application/json",
-          ...await getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
       }
     );
-
-    // Verify the response
-    if (response.status !== 200) {
-      throw new Error(`Server responded with status: ${response.status}`);
-    }
-
     return response.data;
   } catch (error) {
     // More detailed error handling
-    if (axios.isAxiosError(error)) {
-      console.error("API Error:", error.response?.data);
-      throw new Error(
-        error.response?.data?.message || "Failed to update product"
-      );
-    }
-    throw error;
+    handleApiError(error, "Failed to update product");
   }
 };
 
 export const createProduct = async (newProduct: Partial<Product>) => {
   try {
-    const response = await axios.post(
+    const response = await api.post(
       `${currentBaseURL}/ProductManager`,
       newProduct,
       {
         headers: {
           "Content-Type": "application/json",
-          ...await getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
       }
     );
-
-    if (response.status !== 201) {
-      throw new Error(`Server responded with status: ${response.status}`);
-    }
-
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("API Error:", error.response?.data);
-      throw new Error(
-        error.response?.data?.message || "Failed to create product"
-      );
-    }
-    throw error;
+    handleApiError(error, "Failed to create product");
   }
 };
 
@@ -149,28 +104,17 @@ export const deleteProduct = async (productId: number) => {
       throw new Error("Invalid product ID");
     }
 
-    const response = await axios.delete(
+    const response = await api.delete(
       `${currentBaseURL}/ProductManager/${productId}`,
       {
         headers: {
           "Content-Type": "application/json",
-          ...await getAuthHeaders(),
+          ...(await getAuthHeaders()),
         },
       }
     );
-
-    if (response.status !== 200) {
-      throw new Error(`Server responded with status: ${response.status}`);
-    }
-
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("API Error:", error.response?.data);
-      throw new Error(
-        error.response?.data?.message || "Failed to delete product"
-      );
-    }
-    throw error;
+    handleApiError(error, "Failed to delete product");
   }
 };

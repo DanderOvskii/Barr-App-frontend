@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { useRouter } from "expo-router";
-import { getCategories, getCurrentUser } from "../../backend/getData";
-import { Category, Product, user } from "../_types";
+import { getCategories} from "../../backend/getData";
+import { Category} from "../_types";
 import SearchBar from "../components/SearchBar";
 import Header from "../components/header";
 import AppColors from "../appColors";
 import GeneralButton from "../components/GeneralButton";
+import Title from "../components/title";
+import { ROUTES } from "@/navigation/navRoutes";
 export default function Home() {
   const router = useRouter();
 
@@ -33,7 +35,10 @@ export default function Home() {
   //   Verifytoken();
   // }, []);
   const navigateTo = (id: number) => {
-    router.push(`/Products?id=${id}`);
+    router.push({
+      pathname: ROUTES.APP.PRODUCTS, 
+      params: { id },
+    });
   };
 
   const [data, setData] = useState<Category[] | null>(null);
@@ -52,10 +57,10 @@ export default function Home() {
     fetchData();
   }, []);
 
-  const handleInfoPress = (product: Product) => {
+  const handleInfoPress = (productId:number) => {
     router.push({
       pathname: "/ProductInfo",
-      params: { product: JSON.stringify(product) },
+      params: { id: productId },
     });
   };
 
@@ -64,10 +69,10 @@ export default function Home() {
       <Header />
       <SearchBar
         placeholder="Search..."
-        onSelectItem={(Product) => handleInfoPress(Product)}
+        onSelectItem={(Product) => handleInfoPress(Product.id)}
       />
 
-      <Text style={styles.categoryHeader}>Categorie</Text>
+     <Title title="Categories" />
 
       <View style={styles.categoryContainer}>
         {data &&
@@ -97,6 +102,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: "center",
     marginTop: 40,
+    fontFamily: "Resolve-BlackWd",
   },
   categoryContainer: {
     flex: 1,

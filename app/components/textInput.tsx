@@ -10,6 +10,7 @@ interface CustomTextInputProps {
   secureTextEntry?: boolean;
   style?: TextStyle;
   editable?: boolean;
+  keyboardType?: "default" | "numeric" | "email-address" | "decimal-pad";
 }
 const CustomTextInput = ({
   value,
@@ -18,6 +19,7 @@ const CustomTextInput = ({
   secureTextEntry = false,
   style,
   editable = true,
+  keyboardType = "default",
 }: CustomTextInputProps) => {
   return (
     <TextInput
@@ -28,6 +30,7 @@ const CustomTextInput = ({
       secureTextEntry={secureTextEntry}
       style={[style, styles.input]}
       editable={editable}
+      keyboardType={keyboardType}
     />
   );
 };

@@ -19,7 +19,6 @@ import {
 } from "../../backend/productmanagerAPI";
 import { Product, CategoryWithProducts, DisplayProduct } from "../_types";
 export default function ProductManager() {
-  console.log("ProductManager rendered");
   const [categories, setCategories] = useState<CategoryWithProducts[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -39,7 +38,6 @@ export default function ProductManager() {
       try {
         setIsLoading(true);
         const result = await getAllData();
-        console.log("gotDATATATA",result);
         setCategories(result);
       } catch (error) {
         console.error("Error fetching data:", error);

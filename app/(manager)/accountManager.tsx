@@ -11,6 +11,9 @@ import {
 import { getCurrentUser, updateUser } from "../../backend/getData";
 import { user } from "../_types";
 import Header from "../components/header";
+import AppColors from "../appColors";
+import GeneralButton from "../components/GeneralButton";
+import CustomTextInput from "../components/textInput";
 
 export default function AccountManager() {
   const [userData, setUserData] = useState<user | null>(null);
@@ -78,8 +81,7 @@ export default function AccountManager() {
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Username</Text>
-          <TextInput
-            style={styles.input}
+          <CustomTextInput
             value={editedData.username}
             onChangeText={(text) =>
               setEditedData({ ...editedData, username: text })
@@ -91,8 +93,7 @@ export default function AccountManager() {
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>New Password</Text>
-          <TextInput
-            style={styles.input}
+          <CustomTextInput
             value={editedData.password}
             onChangeText={(text) =>
               setEditedData({ ...editedData, password: text })
@@ -105,8 +106,7 @@ export default function AccountManager() {
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Wallet Amount</Text>
-          <TextInput
-            style={styles.input}
+          <CustomTextInput
             value={editedData.wallet}
             onChangeText={(text) =>
               setEditedData({ ...editedData, wallet: text })
@@ -119,17 +119,11 @@ export default function AccountManager() {
 
         {error && <Text style={styles.error}>{error}</Text>}
 
-        <TouchableOpacity
-          style={[styles.button, isLoading && styles.buttonDisabled]}
+        <GeneralButton
+          title="Save Changes"
           onPress={handleSave}
           disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator color="white" />
-          ) : (
-            <Text style={styles.buttonText}>Save Changes</Text>
-          )}
-        </TouchableOpacity>
+        />
       </View>
     </View>
   );
@@ -138,25 +132,21 @@ export default function AccountManager() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f8ff",
+    backgroundColor: AppColors.background,
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: "bold",
-    color: "#333",
+    fontFamily: "Resolve-BlackWd",
+    color: AppColors.text,
     textAlign: "center",
     marginVertical: 20,
   },
   formContainer: {
-    backgroundColor: "white",
+    backgroundColor: AppColors.background,
     padding: 20,
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderColor: AppColors.primary,
+    borderWidth: 2,
   },
   inputContainer: {
     marginBottom: 20,

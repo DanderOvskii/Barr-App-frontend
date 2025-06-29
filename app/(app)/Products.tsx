@@ -6,28 +6,27 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
-import { useRoute } from "@react-navigation/native";
-import { useRouter } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import { getProducts, buyProduct } from "../../backend/getData";
 import { Product } from "../_types";
 import SearchBar from "../components/SearchBar";
 import BuyButton from "../components/buyButton";
 import Header from "../components/header";
-
-type RouteParams = {
-  id: number; // Assuming id is a number, adjust if it's a string
-};
+import AppColors from "../appColors";
+import Title from "../components/title";
+import { ROUTES } from "../../navigation/navRoutes";
 
 export default function Producten() {
   const router = useRouter();
-  const route = useRoute();
-  const { id } = route.params as RouteParams;
+  const { id } = useLocalSearchParams();
+  const idNumber =  Number(id);
   const [data, setData] = useState<Product[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
+  console.log("catogory ID:", id);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await getProducts(id);
+        const result = await getProducts(idNumber);
         setData(result);
       } catch (error: unknown) {
         setError(error as Error);
@@ -36,23 +35,23 @@ export default function Producten() {
 
     fetchData();
   }, [id]);
-  const handleInfoPress = (product: Product) => {
+  const handleInfoPress = (productId: number) => {
     router.push({
-      pathname: "/ProductInfo",
-      params: { product: JSON.stringify(product) },
+      pathname: ROUTES.APP.PRODUCT_INFO,
+      params: { productId: productId },
     });
   };
 
   return (
     <View style={styles.container}>
-    <Header />
+      <Header />
 
       <SearchBar
         placeholder="Search products..."
-        onSelectItem={(product) => handleInfoPress(product)}
+        onSelectItem={(product) => handleInfoPress(product.id)}
       />
 
-      <Text style={styles.categoryHeader}>producten</Text>
+      <Title title="Products" />
 
       <View style={styles.categoryContainer}>
         {data &&
@@ -61,7 +60,8 @@ export default function Producten() {
               <BuyButton product={product} />
               <TouchableOpacity
                 style={styles.infoButton}
-                onPress={() => handleInfoPress(product)}
+                onPress={() => handleInfoPress(product.id)}
+                
               >
                 <Text style={styles.infoButtonText}>i</Text>
               </TouchableOpacity>
@@ -75,8 +75,8 @@ export default function Producten() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f8ff", // Light blue background
-     paddingLeft: 20,
+    backgroundColor: AppColors.background, // Light blue background
+    paddingLeft: 20,
     paddingRight: 20,
   },
   header: {
@@ -111,12 +111,15 @@ const styles = StyleSheet.create({
   },
   categoryHeader: {
     fontSize: 24,
-    color: "#555",
+    color: AppColors.text,
     marginBottom: 10,
     textAlign: "center",
+    marginTop: 40,
+    fontFamily: "Resolve-BlackWd",
   },
   categoryContainer: {
     alignItems: "center",
+    width: "100%",
   },
   categoryButton: {
     width: "100%",

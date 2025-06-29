@@ -43,6 +43,7 @@ const styles = StyleSheet.create({
     borderColor: AppColors.primary,
     borderWidth: 2,
     marginTop: 10,
+    width: "100%",
   },
   text: {
     color: AppColors.text,

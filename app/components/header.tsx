@@ -26,7 +26,6 @@ export default function Header({ user }: { user?: user }) {
 
     fetchUserData();
   }, [user]);
-  console.log("userData", userData);
   return (
     <View style={styles.header}>
       <View style={styles.namesContainer}>

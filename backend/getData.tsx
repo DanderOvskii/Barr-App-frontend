@@ -1,44 +1,50 @@
-import axios from "axios";
+import { api, handleApiError,logout,getAuthHeaders } from "./api";
 import { Product, Category } from "../app/_types";
 import { currentBaseURL } from "./bateUrl";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const getAuthHeaders = async () => {
-  const token = await AsyncStorage.getItem("token");
-  if (!token) throw new Error("No token found");
-  return {
-    Authorization: `Bearer ${token}`,
-  };
-};
+
+
+
 export const getCategories = async () => {
   try {
-    const response = await axios.get(`${currentBaseURL}/`, {
+    const response = await api.get(`${currentBaseURL}/`, {
       headers: await getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching categories:", error);
-    throw error;
+    handleApiError(error, "Categorieën ophalen mislukt.");
   }
 };
+
 export const getProducts = async (categoryId: number) => {
   try {
-    const response = await axios.get(
+    const response = await api.get(
       `${currentBaseURL}/Products?categoryId=${categoryId}`,{
         headers: await getAuthHeaders(),
       }
     );
     return response.data;
   } catch (error) {
-    console.error("Error fetching products:", error);
-    throw error;
+    handleApiError(error, "Producten ophalen mislukt.");
   }
 };
 
+export const getProduct = async (productId: number) => {
+  try {
+    const response = await api.get(
+      `${currentBaseURL}/Product?productId=${productId}`,{
+        headers: await getAuthHeaders(),
+      }
+    );
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Product ophalen mislukt.");
+  }
+};
 
 export const searchProducts = async (query: string) => {
   try {
-    const response = await axios.get(`${currentBaseURL}/search`, {
+    const response = await api.get(`${currentBaseURL}/search`, {
       params: { q: query },
       headers: {
         "Content-Type": "application/json",
@@ -47,13 +53,7 @@ export const searchProducts = async (query: string) => {
     });
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Search API Error:", error.response?.data);
-      throw new Error(
-        error.response?.data?.message || "Failed to search categories"
-      );
-    }
-    throw error;
+    handleApiError(error, "Zoeken naar producten mislukt.");
   }
 };
 
@@ -63,31 +63,26 @@ export const registerUser = async (
   birthdate: Date
 ) => {
   try {
-    const response = await axios.post(`${currentBaseURL}/register`, null, {
+    const response = await api.post(`${currentBaseURL}/register`, null, {
       params: {
         username: username.trim(),
         password: password,
         birthdate: birthdate.toISOString().split("T")[0],
       },
     });
-
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Registration failed");
-    }
-    throw error;
+    handleApiError(error, "Registreren mislukt.");
   }
 };
 
 export const loginUser = async (username: string, password: string) => {
   try {
-    // Create URLSearchParams for form-urlencoded data
     const formData = new URLSearchParams();
     formData.append("username", username);
     formData.append("password", password);
 
-    const response = await axios.post(
+    const response = await api.post(
       `${currentBaseURL}/token`,
       formData.toString(),
       {
@@ -96,36 +91,26 @@ export const loginUser = async (username: string, password: string) => {
         },
       }
     );
-
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message || "Login failed");
-    }
-    throw error;
+    handleApiError(error, "Inloggen mislukt.");
   }
 };
 
 export const getCurrentUser = async () => {
   try {
-    const response = await axios.get(`${currentBaseURL}/users/me`, {
+    const response = await api.get(`${currentBaseURL}/users/me`, {
       headers: await getAuthHeaders(),
     });
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("User API Error:", error.response?.data);
-      throw new Error(
-        error.response?.data?.detail || "Failed to fetch user data"
-      );
-    }
-    throw error;
+    handleApiError(error, "Gebruiker ophalen mislukt.");
   }
 };
 
 export const buyProduct = async (productId: number) => {
   try {
-    const response = await axios.post(
+    const response = await api.post(
       `${currentBaseURL}/buy/${productId}`,
       null,
       {
@@ -134,11 +119,7 @@ export const buyProduct = async (productId: number) => {
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Buy API Error:", error.response?.data);
-      throw new Error(error.response?.data?.message || "Failed to buy product");
-    }
-    throw error;
+    handleApiError(error, "Aankoop mislukt.");
   }
 };
 
@@ -148,7 +129,7 @@ export const updateUser = async (userData: {
   wallet: number;
 }) => {
   try {
-    const response = await axios.put(
+    const response = await api.put(
       `${currentBaseURL}/users/update`,
       userData,
       {
@@ -160,12 +141,6 @@ export const updateUser = async (userData: {
     );
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Update User API Error:", error.response?.data);
-      throw new Error(
-        error.response?.data?.message || "Failed to update user data"
-      );
-    }
-    throw error;
+    handleApiError(error, "Gebruiker bijwerken mislukt.");
   }
 };

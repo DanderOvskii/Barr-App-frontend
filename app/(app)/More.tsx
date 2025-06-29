@@ -2,54 +2,38 @@ import react from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Stack, useRouter, useSegments } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {ROUTES} from "../../navigation/navRoutes"
+import { ROUTES } from "../../navigation/navRoutes";
+import AppColors from "../appColors";
+import GeneralButton from "../components/GeneralButton";
 export default function More() {
   const router = useRouter();
   const handleLogout = async () => {
     await AsyncStorage.removeItem("token");
     await AsyncStorage.removeItem("isAdmin");
     router.replace(ROUTES.AUTH.LOGIN);
-   
   };
-  
 
   return (
     <View style={styles.container}>
       <View style={styles.categoryContainer}>
-        <TouchableOpacity
-          style={styles.categoryButton}
+        <GeneralButton
+          title="Account settings"
           onPress={() => handleLogout()}
-        >
-          <Text style={styles.categoryButtonText}>Account settings</Text>
-        </TouchableOpacity>
+        />
 
-        <TouchableOpacity
-          style={styles.categoryButton}
-          onPress={() => handleLogout()}
-        >
-          <Text style={styles.categoryButtonText}>your stats</Text>
-        </TouchableOpacity>
-    
-        <TouchableOpacity
-          style={styles.adminButton}
+        <GeneralButton title="Your stats" onPress={() => handleLogout()} />
+
+        <GeneralButton
+          title="Product Manager"
           onPress={() => router.push(ROUTES.MANAGER.PRODUCT_MANAGER)}
-          >
-          <Text style={styles.categoryButtonText}>ProductManager</Text>
-        </TouchableOpacity>
+        />
 
-        <TouchableOpacity
-          style={styles.adminButton}
-          onPress={() => router.push("../manager/accountManager")}
-          >
-          <Text style={styles.categoryButtonText}>AccountManager</Text>
-        </TouchableOpacity>
+        <GeneralButton
+          title="Account Maneger"
+          onPress={() => router.push(ROUTES.MANAGER.ACCOUNT_MANAGER)}
+        />
 
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={() => handleLogout()}
-        >
-          <Text style={styles.categoryButtonText}>logout</Text>
-        </TouchableOpacity>
+        <GeneralButton title="Logout" onPress={() => handleLogout()} />
       </View>
     </View>
   );
@@ -57,8 +41,8 @@ export default function More() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f8ff", // Light blue background
-     paddingLeft: 20,
+    backgroundColor: AppColors.background, // Light blue background
+    paddingLeft: 20,
     paddingRight: 20,
   },
   header: {
