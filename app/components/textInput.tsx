@@ -4,7 +4,7 @@ import React from "react";
 import { View, TextInput, Text, StyleSheet, TextStyle } from "react-native";
 import AppColors from "../appColors";
 interface CustomTextInputProps {
-  value: string;
+  value?: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
   secureTextEntry?: boolean;

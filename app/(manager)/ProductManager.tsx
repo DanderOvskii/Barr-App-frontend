@@ -15,9 +15,12 @@ import {
   deleteProduct,
   createProduct,
   createCategory,
-  deleteCategory
+  deleteCategory,
 } from "../../backend/productmanagerAPI";
 import { Product, CategoryWithProducts, DisplayProduct } from "../_types";
+import GeneralButton from "../components/GeneralButton";
+import CustomTextInput from "../components/textInput";
+import AppColors from "../appColors";
 export default function ProductManager() {
   const [categories, setCategories] = useState<CategoryWithProducts[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
@@ -269,7 +272,6 @@ export default function ProductManager() {
       // Refresh the product list after deletion
       const updatedData = await getAllData();
       setCategories(updatedData);
-      
     } catch (error) {
       console.error("Error deleting product:", error);
       Alert.alert("Error", "Failed to delete product");
@@ -285,63 +287,52 @@ export default function ProductManager() {
         <View style={styles.column}>
           <Text style={styles.columnHeader}>Categorie</Text>
           {categories.map((category) => (
-            <TouchableOpacity
+            <GeneralButton
               key={category.id}
-              style={[
-                styles.button,
-                selectedCategory === category.id && styles.selectedButton,
-              ]}
+              title={category.name}
+              disabled={selectedCategory === category.id}
               onPress={() => {
                 setSelectedCategory(category.id);
                 setSelectedProduct(null); // Reset selected product when changing category
               }}
-            >
-              <Text style={styles.buttonText}>{category.name}</Text>
-            </TouchableOpacity>
+            />
           ))}
           {isAddingCategory ? (
             <View style={styles.addCategoryContainer}>
-              <TextInput
-                style={styles.input}
+              <CustomTextInput
                 value={newCategoryName}
                 onChangeText={setNewCategoryName}
                 placeholder="Category name"
-                placeholderTextColor="#999"
-                autoFocus
               />
               <View style={styles.addCategoryButtons}>
-                <TouchableOpacity
-                  style={[styles.cancleButton, { flex: 1 }]}
+                <GeneralButton
+                  title="Cancel"
+                  type="cancle"
                   onPress={() => {
                     setIsAddingCategory(false);
                     setNewCategoryName("");
                   }}
-                >
-                  <Text style={styles.buttonText}>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, { flex: 1 }]}
+                />
+                <GeneralButton
+                  title="Save"
+                  type={"save"}
                   onPress={handleAddCatogory}
-                >
-                  <Text style={styles.buttonText}>Save</Text>
-                </TouchableOpacity>
+                />
               </View>
             </View>
           ) : (
-            <TouchableOpacity
-              style={styles.addButton}
+            <GeneralButton
+              title="+"
+              type="cancle"
               onPress={() => setIsAddingCategory(true)}
-            >
-              <Text style={styles.buttonText}>+</Text>
-            </TouchableOpacity>
+            />
           )}
-          <TouchableOpacity
-            style={[styles.deleteButton, isSaving && styles.deleteButton]}
+          <GeneralButton
+            title="delete"
+            type="delete"
             onPress={handeleDeleteCategory}
             disabled={isSaving}
-          >
-            <Text style={styles.buttonText}>delete</Text>
-          </TouchableOpacity>
+          />
         </View>
 
         {/* Products Column */}
@@ -353,24 +344,18 @@ export default function ProductManager() {
             showsVerticalScrollIndicator={true}
           >
             {currentCategoryProducts.map((product) => (
-              <TouchableOpacity
+              <GeneralButton
+                title={product.name}
                 key={product.id}
-                style={[
-                  styles.button,
-                  selectedProduct?.id === product.id && styles.selectedButton,
-                ]}
+                disabled={selectedProduct?.id === product.id}
                 onPress={() => setSelectedProduct(product)}
-              >
-                <Text style={styles.buttonText}>{product.name}</Text>
-              </TouchableOpacity>
+              />
             ))}
             {selectedCategory && (
-              <TouchableOpacity
-                style={styles.addButton}
+              <GeneralButton
+                title="+"
                 onPress={() => selectedCategory && addProduct(selectedCategory)}
-              >
-                <Text style={styles.buttonText}>+</Text>
-              </TouchableOpacity>
+              />
             )}
           </ScrollView>
         </View>
@@ -386,111 +371,92 @@ export default function ProductManager() {
             >
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Naam</Text>
-                <TextInput
-                  style={styles.input}
+                <CustomTextInput
                   value={editedProduct?.name}
                   onChangeText={(value) => handleProductChange("name", value)}
                   placeholder="Enter name"
-                  placeholderTextColor="#999"
                 />
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Prijs</Text>
-                <TextInput
-                  style={styles.input}
+                <CustomTextInput
                   value={editedProduct?.price.toString() || ""}
                   onChangeText={(value) => handleProductChange("price", value)}
                   placeholder="Enter price"
-                  placeholderTextColor="#999"
                   keyboardType="decimal-pad"
                 />
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>hoeveelheid g/ml</Text>
-                <TextInput
-                  style={styles.input}
+                <CustomTextInput
                   value={editedProduct?.amount.toString() || ""}
                   onChangeText={(value) => handleProductChange("amount", value)}
                   placeholder="Enter amount"
-                  placeholderTextColor="#999"
                   keyboardType="decimal-pad"
                 />
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Calorieën</Text>
-                <TextInput
-                  style={styles.input}
+                <CustomTextInput
                   value={editedProduct?.calorien.toString() || ""}
                   onChangeText={(value) =>
                     handleProductChange("calorien", value)
                   }
                   placeholder="Enter calories"
-                  placeholderTextColor="#999"
                   keyboardType="decimal-pad"
                 />
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>Alcohol per 100ml</Text>
-                <TextInput
-                  style={styles.input}
+                <CustomTextInput
                   value={editedProduct?.alcohol.toString() || ""}
                   onChangeText={(value) =>
                     handleProductChange("alcohol", value)
                   }
                   placeholder="Enter alcohol content"
-                  placeholderTextColor="#999"
                   keyboardType="decimal-pad"
                 />
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>korting</Text>
-                <TextInput
-                  style={styles.input}
+                <CustomTextInput
                   value={editedProduct?.korting.toString() || ""}
                   onChangeText={(value) =>
                     handleProductChange("korting", value)
                   }
                   placeholder="Enter korting"
-                  placeholderTextColor="#999"
                   keyboardType="decimal-pad"
                 />
               </View>
               <View style={styles.inputContainer}>
                 <Text style={styles.inputLabel}>vooraad</Text>
-                <TextInput
-                  style={styles.input}
+                <CustomTextInput
                   value={editedProduct?.vooraad.toString() || ""}
                   onChangeText={(value) =>
                     handleProductChange("vooraad", value)
                   }
                   placeholder="Enter vooraad"
-                  placeholderTextColor="#999"
                   keyboardType="decimal-pad"
                 />
               </View>
-              <TouchableOpacity
-                style={[styles.saveButton, isSaving && styles.savingButton]}
+              <GeneralButton
+                title="save"
                 onPress={handleSave}
                 disabled={isSaving}
-              >
-                <Text style={styles.buttonText}>
-                  {isSaving ? "Saving..." : "Save"}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.cancleButton, isSaving && styles.savingButton]}
+                type="save"
+              />
+              <GeneralButton
+                title="Cancel"
                 onPress={handleCancel}
                 disabled={isSaving}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.deleteButton, isSaving && styles.deleteButton]}
+                type="cancle"
+              />
+              <GeneralButton
+                title="delete"
+                type="delete"
                 onPress={handeleDeleteProduct}
                 disabled={isSaving}
-              >
-                <Text style={styles.buttonText}>delete</Text>
-              </TouchableOpacity>
+              />
             </ScrollView>
           ) : (
             <Text style={styles.noSelection}>
@@ -506,7 +472,7 @@ export default function ProductManager() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f0f8ff",
+    backgroundColor: AppColors.background, // Light blue background
     padding: 20,
   },
   contentContainer: {
@@ -522,112 +488,22 @@ const styles = StyleSheet.create({
 
   columnHeader: {
     fontSize: 20,
-    fontWeight: "bold",
-    color: "#555",
+    color: AppColors.primary,
     marginBottom: 15,
+    fontFamily: "roboto-bold",
   },
-  button: {
-    width: "100%",
-    padding: 15,
-    backgroundColor: "#4caf50",
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  selectedButton: {
-    backgroundColor: "#2e7d32", // darker green for selected state
-  },
-  saveButton: {
-    width: "100%",
-    padding: 15,
-    backgroundColor: "#4caf50",
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  addButton: {
-    width: "100%",
-    padding: 15,
-    backgroundColor: "#ff6347", // tomato color for add button
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  cancleButton: {
-    width: "100%",
-    padding: 15,
-    backgroundColor: "#ff6347",
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  deleteButton: {
-    width: "100%",
-    padding: 15,
-    backgroundColor: "#dc3545",
-    borderRadius: 10,
-    marginBottom: 10,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: "white",
-    fontWeight: "500",
-  },
+
   inputContainer: {
     width: "100%",
-    marginBottom: 5,
+    marginBottom: 15,
   },
   inputLabel: {
     fontSize: 14,
-    color: "#555",
-    marginBottom: 15,
+    color: AppColors.text,
+    marginBottom: 5,
     fontWeight: "500",
   },
-  input: {
-    width: "100%",
-    padding: 12,
-    backgroundColor: "white",
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    fontSize: 16,
-    color: "#333",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  centered: {
-    justifyContent: "center",
-    alignItems: "center",
-  },
+
   noSelection: {
     color: "#666",
     fontSize: 16,
@@ -635,9 +511,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 
-  savingButton: {
-    backgroundColor: "#999",
-  },
   scrollableColumn: {
     flexGrow: 1, // Changed from flex: 1
     width: "100%",
@@ -648,7 +521,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   addCategoryButtons: {
-    flexDirection: "row",
+    flexDirection: "column",
     gap: 10,
   },
 });

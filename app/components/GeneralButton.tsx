@@ -15,6 +15,7 @@ type GeneralButtonProps = {
   style?: ViewStyle;
   textStyle?: TextStyle;
   disabled?: boolean;
+  type?:"delete" | "cancle" | "save" | "deafault";
 };
 const GeneralButton = ({
   title,
@@ -22,10 +23,24 @@ const GeneralButton = ({
   style,
   textStyle,
   disabled = false,
+  type = "deafault",
 }:GeneralButtonProps) => {
+  const getBorderColor = () => {
+    switch (type) {
+      case "delete":
+        return AppColors.warning; // Red for delete
+      case "cancle":
+        return AppColors.cancle; // Gray for cancel
+      case "save":
+        return AppColors.success; // Green for save
+      case "deafault":
+      default:
+        return AppColors.primary; // Default primary color
+    }
+  };
   return (
     <TouchableOpacity
-      style={[styles.button, disabled && styles.disabledButton, style]}
+      style={[styles.button,{borderColor:getBorderColor()}, disabled && styles.disabledButton, style]}
       onPress={onPress}
       activeOpacity={0.8}
       disabled={disabled}
@@ -40,7 +55,6 @@ const styles = StyleSheet.create({
     backgroundColor: AppColors.background,
     padding: 15,
     alignItems: "center",
-    borderColor: AppColors.primary,
     borderWidth: 2,
     marginTop: 10,
     width: "100%",
@@ -51,7 +65,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-bold",
   },
   disabledButton: {
-    backgroundColor: "#A0A0A0",
+    borderColor: AppColors.secondary,
   },
  
 });
