@@ -44,7 +44,7 @@ export default function signup() {
     try {
       const response = await registerUser(username, password, birthdate);
       await AsyncStorage.setItem("token", response.access_token);
-      router.replace(ROUTES.HOME);
+      router.replace(ROUTES.APP.HOME);
     } catch (error: any) {
       setError(error.message);
       console.error("Signup error:", error);

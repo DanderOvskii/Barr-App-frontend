@@ -8,6 +8,7 @@ export type Product = {
   alcohol: number;
   korting: number;
   vooraad: number;
+  discount_price?: number; // Optional field for discounted price
   // Add any other product properties you have
 };
 export type DisplayProduct = {

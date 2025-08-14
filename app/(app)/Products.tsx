@@ -22,7 +22,6 @@ export default function Producten() {
   const idNumber =  Number(id);
   const [data, setData] = useState<Product[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
-  console.log("catogory ID:", id);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,7 +40,6 @@ export default function Producten() {
       params: { productId: productId },
     });
   };
-
   return (
     <View style={styles.container}>
       <Header />

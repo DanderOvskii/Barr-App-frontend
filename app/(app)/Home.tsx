@@ -78,6 +78,7 @@ export default function Home() {
         {data &&
           data.map((categorie) => (
             <GeneralButton
+            key={categorie.id}
               onPress={() => navigateTo(categorie.id)}
               title={categorie.name.toUpperCase()}
             />

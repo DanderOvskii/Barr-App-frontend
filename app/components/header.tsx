@@ -33,7 +33,7 @@ export default function Header({ user }: { user?: user }) {
         <Text style={styles.sirname}>{"siegers"}</Text>
       </View>
 
-      <Text style={styles.balance}>€{userData?.wallet || "Loading..."}</Text>
+      <Text style={styles.balance}>€{userData?.wallet !== undefined ? userData.wallet : "Loading..."}</Text>
     </View>
   );
 }
