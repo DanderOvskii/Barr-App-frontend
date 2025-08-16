@@ -144,3 +144,25 @@ export const updateUser = async (userData: {
     handleApiError(error, "Gebruiker bijwerken mislukt.");
   }
 };
+
+export const getPurchases = async () => {
+  try {
+    const response = await api.get(`${currentBaseURL}/purchases`, {
+      headers: await getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Statistieken ophalen mislukt.");
+  }
+};
+
+export const getMonthlyStats = async () => {
+  try {
+    const response = await api.get(`${currentBaseURL}/stats/monthly`, {
+      headers: await getAuthHeaders(),
+    });
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "Maandstatistieken ophalen mislukt.");
+  }
+};

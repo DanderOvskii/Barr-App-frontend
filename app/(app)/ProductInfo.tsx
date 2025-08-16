@@ -27,6 +27,20 @@ console.log("product ID:", productId);
     fetchData();
   }, [productId]);
 
+  const getTitle = () => {
+    if(data) {
+      
+      const hasDiscount = data.discount_price !== data.price;
+      if (hasDiscount&& data.discount_price) {
+        return `€ ${data.discount_price % 1 === 0 ? `${data.discount_price}.-` : data.discount_price} was € ${data.price % 1 === 0 ? `${data.price}.-` : data.price}`;
+      }else {
+        return `€ ${data.price % 1 === 0 ? `${data.price}.-` : data.price}`;
+      }
+    }else {
+      error && console.error("Error fetching product data:", error.message);
+    }
+  };
+
    if (error) {
     return (
       <View style={styles.container}>
@@ -55,7 +69,7 @@ console.log("product ID:", productId);
         <Text style={styles.value}>{data.name}</Text>
 
         <Text style={styles.label}>Price:</Text>
-        <Text style={styles.value}>€{data.price}</Text>
+        <Text style={styles.value}>{getTitle()}</Text>
 
         <Text style={styles.label}>Amount:</Text>
         <Text style={styles.value}>{data.amount}g/ml</Text>

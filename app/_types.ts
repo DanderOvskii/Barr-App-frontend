@@ -43,3 +43,20 @@ export type updateUserType ={
   password?: string;
   wallet: number;
 }
+
+export type Purchase = {
+  id: number; 
+  product_name: string;
+  amount: number;
+  product_price: number;
+  total_price: number;
+  discount: number;
+  purchase_date: string;
+}
+
+export type stats = {
+  products_bought: number;
+  total_spent: number;
+  calories_consumed: number;
+  alcohol_consumed: number;
+}

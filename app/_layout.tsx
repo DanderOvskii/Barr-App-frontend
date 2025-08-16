@@ -21,9 +21,9 @@ function useProtectedRoute() {
       if (!token && !inAuthGroup) {
         router.replace(ROUTES.AUTH.LOGIN);
       } else if (token && inAuthGroup) {
-        router.replace(ROUTES.HOME);
+        router.replace(ROUTES.APP.HOME);
       } else if (isManagerGroup && !isAdmin) {
-        router.replace(ROUTES.HOME);
+        router.replace(ROUTES.APP.HOME);
       }
     };
     

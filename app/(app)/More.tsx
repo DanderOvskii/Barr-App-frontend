@@ -21,7 +21,7 @@ export default function More() {
           onPress={() => handleLogout()}
         />
 
-        <GeneralButton title="Your stats" onPress={() => handleLogout()} />
+        <GeneralButton title="Your stats" onPress={() => router.push(ROUTES.APP.STATS)} />
 
         <GeneralButton
           title="Product Manager"

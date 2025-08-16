@@ -10,6 +10,7 @@ export const ROUTES = {
     PRODUCTS: "/(app)/Products",
     PRODUCT_INFO: "/(app)/ProductInfo",
     MORE: "/(app)/More",
+    STATS: "/(app)/Stats",
   },
   MANAGER: {
     PRODUCT_MANAGER: "/(manager)/ProductManager",

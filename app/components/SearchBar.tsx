@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -7,6 +7,7 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import { getCategories } from "../../backend/getData";
 import { Product } from "../_types";
@@ -25,13 +26,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
   style,
   onSelectItem,
 }) => {
-    const [searchQuery, setSearchQuery] = useState("");
-    const [data, setData] = useState<Product[] | null>(null);
-    const [filteredData, setFilteredData] = useState<Product[] | null>(null);
-    const [showResults, setShowResults] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    
+  const [searchQuery, setSearchQuery] = useState("");
+  const [data, setData] = useState<Product[] | null>(null);
+  const [filteredData, setFilteredData] = useState<Product[] | null>(null);
+  const [showResults, setShowResults] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,13 +48,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   useEffect(() => {
     const searchData = async () => {
-      if (searchQuery.length >= 2) {
+      if (searchQuery.trim().length >= 2) {
         setIsLoading(true);
+        setError(null);
         try {
-          const results = await searchProducts(searchQuery);
+          const results = await searchProducts(searchQuery.trim());
           setFilteredData(results);
           setShowResults(true);
-          setError(null);
         } catch (error) {
           console.error("Search error:", error);
           setError("Search failed");
@@ -64,6 +65,8 @@ const SearchBar: React.FC<SearchBarProps> = ({
       } else {
         setFilteredData(null);
         setShowResults(false);
+        setIsLoading(false);
+        setError(null);
       }
     };
 
@@ -71,13 +74,67 @@ const SearchBar: React.FC<SearchBarProps> = ({
     return () => clearTimeout(debounceTimer);
   }, [searchQuery]);
 
-  const handleItemPress = (item: Product) => {
+  const handleItemPress = useCallback((item: Product) => {
     if (onSelectItem) {
       onSelectItem(item);
     }
     setSearchQuery("");
     setShowResults(false);
+    setFilteredData(null);
+  }, [onSelectItem]);
+
+  const clearSearch = () => {
+    setSearchQuery("");
+    setShowResults(false);
+    setFilteredData(null);
+    setError(null);
   };
+
+  const renderResults = () => {
+    if (isLoading) {
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color={AppColors.primary} />
+          <Text style={styles.loadingText}>Searching...</Text>
+        </View>
+      );
+    }
+
+    if (error) {
+      return (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>{error}</Text>
+        </View>
+      );
+    }
+
+    if (filteredData && filteredData.length === 0) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No results found</Text>
+        </View>
+      );
+    }
+
+    return (
+      <ScrollView style={styles.resultsList} keyboardShouldPersistTaps="handled">
+        {filteredData?.map((item) => (
+          <TouchableOpacity
+            key={item.id}
+            style={styles.resultItem}
+            onPress={() => handleItemPress(item)}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.resultText}>{item.name}</Text>
+            {item.price && (
+              <Text style={styles.priceText}>€{item.price.toFixed(2)}</Text>
+            )}
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
+
   return (
     <View style={[styles.container, style]}>
       <CustomTextInput
@@ -86,18 +143,10 @@ const SearchBar: React.FC<SearchBarProps> = ({
         onChangeText={setSearchQuery}
       />
 
-      {showResults && filteredData && (
-        <ScrollView style={styles.resultsList}>
-          {filteredData.map((item) => (
-            <TouchableOpacity
-              key={item.id}
-              style={styles.resultItem}
-              onPress={() => handleItemPress(item)}
-            >
-              <Text style={styles.resultText}>{item.name}</Text>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+      {(showResults || isLoading || error) && (
+        <View style={styles.resultsContainer}>
+          {renderResults()}
+        </View>
       )}
     </View>
   );
@@ -108,25 +157,69 @@ const styles = StyleSheet.create({
     width: "100%",
     zIndex: 1,
   },
-  resultsList: {
-    position: 'absolute', // Changed to absolute
-    top: '100%', // Position below search input
-    left: 10,
-    right: 10,
+  resultsContainer: {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
     backgroundColor: AppColors.background,
     maxHeight: 200,
     borderWidth: 2,
     borderColor: AppColors.primary,
-    zIndex: 1000, // Higher than container
+    borderTopWidth: 0,
+    zIndex: 1000,
+    elevation: 5, // Android shadow
+    shadowColor: '#000', // iOS shadow
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  resultsList: {
+    flex: 1,
   },
   resultItem: {
     padding: 15,
-    borderBottomWidth: 2,
+    borderBottomWidth: 1,
     borderBottomColor: AppColors.primary,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   resultText: {
-    fontSize: 20,
+    fontSize: 16,
     color: AppColors.text,
+    flex: 1,
+  },
+  priceText: {
+    fontSize: 14,
+    color: AppColors.primary,
+    fontWeight: 'bold',
+  },
+  loadingContainer: {
+    padding: 20,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    marginLeft: 10,
+    color: AppColors.text,
+  },
+  errorContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+  },
+  emptyContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  emptyText: {
+    color: AppColors.text,
+    fontStyle: 'italic',
   },
 });
 
