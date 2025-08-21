@@ -3,14 +3,14 @@ import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import AppColors from '../appColors';
 import Header from '../components/header';
 import PurchasHistory from '../components/purchasHistory';
-import MonthlyStats from '../components/monthlyStats';
+import PeriodStats from '../components/PeriodStats';
 
 export default function Stats (){
     return(
         <View style={styles.container}>
             <Header/>
             <PurchasHistory height={200}/>
-            <MonthlyStats/>
+            <PeriodStats/>
         </View> 
     )
 }

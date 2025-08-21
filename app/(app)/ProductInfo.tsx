@@ -9,11 +9,10 @@ import Title from "../components/title";
 import { getProduct } from "@/backend/getData";
 
 export default function ProductInfo() {
-  const { productId } = useLocalSearchParams();
-  const productIdNumber = Number(productId);
+  const {id} = useLocalSearchParams();
+  const productIdNumber = Number(id);
   const [data, setData] = useState<Product | null>(null);
   const [error, setError] = useState<Error | null>(null);
-console.log("product ID:", productId);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -25,7 +24,7 @@ console.log("product ID:", productId);
     };
 
     fetchData();
-  }, [productId]);
+  }, [id]);
 
   const getTitle = () => {
     if(data) {

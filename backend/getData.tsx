@@ -156,10 +156,18 @@ export const getPurchases = async () => {
   }
 };
 
-export const getMonthlyStats = async () => {
+export const getPeriodStats = async (date:Date, period:0|1|2) => {
   try {
-    const response = await api.get(`${currentBaseURL}/stats/monthly`, {
-      headers: await getAuthHeaders(),
+    const response = await api.get(`${currentBaseURL}/stats`, {
+      params:{
+        date: date.toISOString().split("T")[0],
+        period: period,
+      },
+      headers:{
+        'Content-Type': 'application/json',
+        ...await getAuthHeaders(),
+      }
+
     });
     return response.data;
   } catch (error) {

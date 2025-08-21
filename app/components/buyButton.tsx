@@ -32,7 +32,6 @@ export default function BuyButton({ product }: BuyButtonProps) {
       setIsLoading(false);
     }
   };
-  console.log("Product:", product.discount_price, product.price);
 
   const getTitle = () => {
     if(isLoading) {

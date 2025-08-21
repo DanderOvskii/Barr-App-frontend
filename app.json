@@ -4,7 +4,7 @@
     "slug": "Barr-App",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/barapplogodeel2,png",
+    "icon": "./assets/images/barapplogodeel2.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,21 +13,22 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/barapplogodeel2,png",
+        "foregroundImage": "./assets/images/barapplogodeel2.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.danderorthofoodie.BarrApp"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/barapplogodeel2,png"
+      "favicon": "./assets/images/barapplogodeel2.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/barapplogodeel2,png",
+          "image": "./assets/images/barapplogodeel2.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
@@ -42,7 +43,7 @@
       },
       {
         "asset": "./assets/fonts/Roboto-Regular.ttf",
-        "family": "Roboto"	
+        "family": "Roboto"
       },
       {
         "asset": "./assets/fonts/Resolve-BlackWd.otf",
@@ -52,7 +53,6 @@
         "asset": "./assets/fonts/AtomicMarker.otf",
         "family": "AtomicMarker"
       }
-
     ],
     "experiments": {
       "typedRoutes": true

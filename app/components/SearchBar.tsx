@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   TextInput,
@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { getCategories } from "../../backend/getData";
 import { Product } from "../_types";
-import { searchProducts } from '../../backend/getData';
+import { searchProducts } from "../../backend/getData";
 import AppColors from "../appColors";
 import CustomTextInput from "./textInput";
 
@@ -32,7 +32,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
   const [showResults, setShowResults] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -48,13 +48,13 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
   useEffect(() => {
     const searchData = async () => {
-      if (searchQuery.trim().length >= 2) {
+      if (searchQuery.length >= 2) {
         setIsLoading(true);
-        setError(null);
         try {
-          const results = await searchProducts(searchQuery.trim());
+          const results = await searchProducts(searchQuery);
           setFilteredData(results);
           setShowResults(true);
+          setError(null);
         } catch (error) {
           console.error("Search error:", error);
           setError("Search failed");
@@ -66,7 +66,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
         setFilteredData(null);
         setShowResults(false);
         setIsLoading(false);
-        setError(null);
+        setError(null)
       }
     };
 
@@ -74,23 +74,15 @@ const SearchBar: React.FC<SearchBarProps> = ({
     return () => clearTimeout(debounceTimer);
   }, [searchQuery]);
 
-  const handleItemPress = useCallback((item: Product) => {
+  const handleItemPress = (item: Product) => {
     if (onSelectItem) {
       onSelectItem(item);
     }
     setSearchQuery("");
     setShowResults(false);
-    setFilteredData(null);
-  }, [onSelectItem]);
-
-  const clearSearch = () => {
-    setSearchQuery("");
-    setShowResults(false);
-    setFilteredData(null);
-    setError(null);
   };
 
-  const renderResults = () => {
+   const renderResults = () => {
     if (isLoading) {
       return (
         <View style={styles.loadingContainer}>
@@ -134,7 +126,6 @@ const SearchBar: React.FC<SearchBarProps> = ({
       </ScrollView>
     );
   };
-
   return (
     <View style={[styles.container, style]}>
       <CustomTextInput
