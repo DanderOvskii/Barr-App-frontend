@@ -20,7 +20,7 @@ export default function Home() {
 
   // useEffect(() => {
   //   const Verifytoken = async () => {
-  //     const token = await AsyncStorage.getItem("token");
+  //     const token = await webStorage.getItem("token");
   //     try {
   //       const response = await fetch(`${currentBaseURL}/verify-token/${token}`);
   //       if (!response.ok) {
@@ -28,7 +28,7 @@ export default function Home() {
   //       }
   //     } catch (error) {
   //       console.error("Error verifying token:", error);
-  //       AsyncStorage.removeItem("token");
+  //       webStorage.removeItem("token");
   //       router.replace("/(login)/login");
   //     }
   //   };

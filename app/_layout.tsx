@@ -2,7 +2,7 @@
 
 import { Slot, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { webStorage } from "@/backend/api";
 import { ROUTES } from "@/navigation/navRoutes";
 import { useFonts } from "expo-font";
 import { View } from "react-native";
@@ -16,7 +16,7 @@ function useProtectedRoute() {
       const inAuthGroup = segments[0] === "(auth)";
       const isManagerGroup = segments[0] === "(manager)";
 
-      const token = await AsyncStorage.getItem("token");
+      const token = await webStorage.getItem("token");
       const isAdmin = true; // Replace with actual check
       if (!token && !inAuthGroup) {
         router.replace(ROUTES.AUTH.LOGIN);

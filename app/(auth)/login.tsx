@@ -9,11 +9,11 @@ import {
 } from "react-native";
 import { loginUser } from "../../backend/getData";
 import { useRouter } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ROUTES } from "@/navigation/navRoutes";
 import AppColors from "../appColors";
 import GeneralButton from "../components/GeneralButton";
 import CustomTextInput from "../components/textInput";
+import { webStorage } from "@/backend/api";
 
 export default function login() {
   const router = useRouter();
@@ -41,7 +41,7 @@ export default function login() {
       // Example: await SecureStore.setItemAsync('userToken', response.token);
 
       // Navigate to main screen
-      await AsyncStorage.setItem("token", response.access_token);
+      webStorage.setItem("token", response.access_token);
 
       router.replace(ROUTES.APP.HOME);
     } catch (error) {

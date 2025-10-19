@@ -1,8 +1,8 @@
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { ROUTES } from "@/navigation/navRoutes";
 import { currentBaseURL } from "./bateUrl";
+import { webStorage } from "@/app/utils/WebStorage";
 
 export const api = axios.create({
   baseURL: currentBaseURL,
@@ -12,7 +12,7 @@ api.interceptors.response.use(
   response => response,
   async error => {
     if (error.response?.status === 401) {
-      await AsyncStorage.removeItem("token");
+      await webStorage.removeItem("token");
       router.replace(ROUTES.AUTH.LOGIN);
       // Optionally, you can reject with a custom error or just return
     }else if (error.response?.status === 403) {
@@ -40,12 +40,12 @@ export function handleApiError(error: any, defaultMessage = "Er is iets misgegaa
 }
 
 export const logout = async () => {
-  await AsyncStorage.removeItem("token");
+  await webStorage.removeItem("token");
   router.replace(ROUTES.AUTH.LOGIN);
 };
 
 export const getAuthHeaders = async () => {
-  const token = await AsyncStorage.getItem("token");
+  const token = await webStorage.getItem("token");
   if (!token){ 
     await logout();
     throw new Error("No token found")};
@@ -53,3 +53,4 @@ export const getAuthHeaders = async () => {
     Authorization: `Bearer ${token}`,
   };
 };
+

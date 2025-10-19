@@ -1,15 +1,15 @@
 import react from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Stack, useRouter, useSegments } from "expo-router";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ROUTES } from "../../navigation/navRoutes";
 import AppColors from "../appColors";
 import GeneralButton from "../components/GeneralButton";
+import { webStorage } from "../utils/WebStorage";
 export default function More() {
   const router = useRouter();
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("token");
-    await AsyncStorage.removeItem("isAdmin");
+    await webStorage.removeItem("token");
+    await webStorage.removeItem("isAdmin");
     router.replace(ROUTES.AUTH.LOGIN);
   };
 

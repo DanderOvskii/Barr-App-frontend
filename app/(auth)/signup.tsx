@@ -10,7 +10,7 @@ import {
 import { registerUser } from "../../backend/getData";
 import { useRouter } from "expo-router";
 import CustomDatePicker from "../components/datepicker";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { webStorage } from "@/backend/api";
 import { ROUTES } from "@/navigation/navRoutes";
 import GeneralButton from "../components/GeneralButton";
 import AppColors from "../appColors";
@@ -43,7 +43,7 @@ export default function signup() {
     setIsLoading(true);
     try {
       const response = await registerUser(username, password, birthdate);
-      await AsyncStorage.setItem("token", response.access_token);
+      await webStorage.setItem("token", response.access_token);
       router.replace(ROUTES.APP.HOME);
     } catch (error: any) {
       setError(error.message);
